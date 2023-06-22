@@ -127,7 +127,7 @@ samtools view -c ${outsam}
 samtools view -q $q10filter -b -@ $bt2_threads $outsam | samtools sort -m 8G -@ $bt2_threads -o $outbam
 
 #Make an index of the sorted bam file
-samtools index ${outbam}
+samtools index -c -@ $bt2_threads ${outbam}
 
 # count total reads after filtering
 echo "${ID} total alignments after MAPQ filter (should only include reads that map to one location)"
