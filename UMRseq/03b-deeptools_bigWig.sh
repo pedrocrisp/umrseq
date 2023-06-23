@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --job-name bowtie2
+#SBATCH --job-name bigWig
 #SBATCH --requeue
 #SBATCH --partition=general
 
