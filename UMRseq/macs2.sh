@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 #SBATCH --job-name macs2
 #SBATCH --requeue
 #SBATCH --partition=general
