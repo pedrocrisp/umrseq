@@ -123,8 +123,8 @@ blacklist <- gr_obj
 
 # set up samples
 # find file ending with ".bam"
-bam.files <- c(dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample1, ".*.bam$"), full.names = T, ),
-               dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample2, ".*.bam$"), full.names = T, ))
+bam.files <- c(dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample1, "*.bam$"), full.names = T, ),
+               dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample2, "*.bam$"), full.names = T, ))
 
 # get file names
 bam.files
@@ -134,9 +134,9 @@ bam.files
 # bam.files <- bam.files[c(1,2,4,5)]
 # bam.files
 
-sample1_reps <- length(dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample1, ".*.bam$"), full.names = T, ))
+sample1_reps <- length(dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample1, "*.bam$"), full.names = T, ))
 
-sample2_reps <- length( dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample2, ".*.bam$"), full.names = T, ))
+sample2_reps <- length( dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample2, "*.bam$"), full.names = T, ))
 
 celltype <- c(rep(sample1, sample1_reps), rep(sample2, sample2_reps))
 celltype

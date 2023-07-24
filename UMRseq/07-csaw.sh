@@ -35,8 +35,8 @@ cd analysis
 
 ########## Run #################
 
-## Run R module to creat 100bp tile bed file
-R -f ~/gitrepos/crisplab_epigenomics/ATACseq/07-csaw.R \
+## Run R module to create 100bp tile bed file
+R -f ~/gitrepos/umrseq/UMRseq/07-csaw.R \
 --args $ID $DMR_contrasts_table_file $path_to_data_files $blacklist $filter_FC $bin_size $window_spacing
 
 # Annotation module
@@ -91,7 +91,7 @@ bedtools closest \
 # TE_annotation: ~/umn/refseqs/maize/genome_annotations/Zea_mays.AGPv4.dna.toplevel_sorted.chrom.sizes
 
 # summarise and plot annotation
-R -f ~/gitrepos/crisplab_epigenomics/ATACseq/07-csaw-gene-overlaps.R \
+R -f ~/gitrepos/umrseq/UMRseq/07-csaw-gene-overlaps.R \
 --args $ID $DMR_contrasts_table_file $path_to_data_files $blacklist $filter_FC $bin_size $window_spacing
 
 echo finished summarising
