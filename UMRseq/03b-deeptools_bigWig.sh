@@ -66,13 +66,13 @@ bamCoverage \
 
 # also make Kb coverage plots to look at plamids in transgeen free exp trimmed_align_bowtie2_bigWigs_deeptools
 # this is normalised to genome size so will calculate x-coverage essentially?
-# hardcoded for sorghum
+# sorghum 708863705
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
 -o ${bam_dir}_bigWigs_deeptools/${ID}_1000bin_RPGC.bedgraph \
 --binSize 1000 \
 --normalizeUsing RPGC \
---effectiveGenomeSize 708863705 \
+--effectiveGenomeSize $RPGC \
 --outFileFormat bedgraph \
 -p 2
 
