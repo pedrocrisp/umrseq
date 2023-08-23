@@ -64,6 +64,18 @@ bamCoverage \
 --outFileFormat bedgraph \
 -p 2
 
+# also make Kb coverage plots to look at plamids in transgeen free exp trimmed_align_bowtie2_bigWigs_deeptools
+# this is normalised to genome size so will calculate x-coverage essentially?
+# hardcoded for sorghum
+bamCoverage \
+--bam $bam_dir/${ID}_sorted.bam \
+-o ${bam_dir}_bigWigs_deeptools/${ID}_1000bin_RPGC.bedgraph \
+--binSize 1000 \
+--normalizeUsing RPGC \
+--effectiveGenomeSize 708863705 \
+--outFileFormat bedgraph \
+-p 2
+
 ############ get frag sizes ##############
 # get frag sizes to check level of tagmentation using picard
 # path to call picard jar - eg  - "/home/uqpcrisp/software/picard.jar"
