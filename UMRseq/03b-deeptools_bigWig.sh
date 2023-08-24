@@ -20,6 +20,8 @@ cd "$SLURM_SUBMIT_DIR"
 echo working dir is now $PWD
 
 ########## Modules #################
+# dependencies
+# conda env with bamutil and mosdepth installed
 conda activate $conda_enviro
 
 ########## Set up dirs #################
@@ -64,17 +66,31 @@ bamCoverage \
 --outFileFormat bedgraph \
 -p 2
 
-# also make Kb coverage plots to look at plamids in transgeen free exp trimmed_align_bowtie2_bigWigs_deeptools
-# this is normalised to genome size so will calculate x-coverage essentially?
-# sorghum 708863705
-bamCoverage \
---bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_bigWigs_deeptools/${ID}_1000bin_RPGC.bedgraph \
---binSize 1000 \
---normalizeUsing RPGC \
---effectiveGenomeSize $RPGC \
---outFileFormat bedgraph \
--p 2
+# make 500 bp bin with cumulative coverage and average coverage stats using mosdepth
+# -n dont output per-base depth. skipping this output will speed execution substantially. prefer quantized or thresholded values if possible.
+# --fast-mode dont look at internal cigar operations or correct mate overlaps (recommended for most use-cases).
+# --by 500 500bp bins
+# prefix
+# bam
+
+mosdepth \
+-n \
+--fast-mode \
+--by 500 \
+${bam_dir}_bigWigs_mosdepth/${ID} \
+$bam_dir/${ID}_sorted.bam
+
+# # also make Kb coverage plots to look at plamids in transgeen free exp trimmed_align_bowtie2_bigWigs_deeptools
+# # this is normalised to genome size so will calculate x-coverage essentially?
+# # sorghum 708863705
+# bamCoverage \
+# --bam $bam_dir/${ID}_sorted.bam \
+# -o ${bam_dir}_bigWigs_deeptools/${ID}_1000bin_RPGC.bedgraph \
+# --binSize 1000 \
+# --normalizeUsing RPGC \
+# --effectiveGenomeSize $RPGC \
+# --outFileFormat bedgraph \
+# -p 2# 
 
 ############ get frag sizes ##############
 # get frag sizes to check level of tagmentation using picard
