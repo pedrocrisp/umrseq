@@ -36,6 +36,7 @@ echo sample being mapped is $ID
 cd analysis
 mkdir -p ${bam_dir}_bigWigs_deeptools
 mkdir -p ${bam_dir}_insert_metrics
+mkdir -p ${bam_dir}_mosdepth
 
 ########## Run #################
 # make normalised bigWigs
@@ -77,7 +78,7 @@ mosdepth \
 -n \
 --fast-mode \
 --by 500 \
-${bam_dir}_bigWigs_mosdepth/${ID} \
+${bam_dir}_mosdepth/${ID} \
 $bam_dir/${ID}_sorted.bam
 
 # # also make Kb coverage plots to look at plamids in transgeen free exp trimmed_align_bowtie2_bigWigs_deeptools
