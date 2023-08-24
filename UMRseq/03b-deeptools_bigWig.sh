@@ -21,7 +21,7 @@ echo working dir is now $PWD
 
 ########## Modules #################
 # dependencies
-# conda env with bamutil and mosdepth installed
+# conda env with deeptools and mosdepth installed
 conda activate $conda_enviro
 
 ########## Set up dirs #################
