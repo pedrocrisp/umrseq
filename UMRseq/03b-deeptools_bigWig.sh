@@ -98,7 +98,7 @@ $bam_dir/${ID}_sorted.bam
 # path to call picard jar - eg  - "/home/uqpcrisp/software/picard.jar"
 
 ########## Modules #################
-module load java/11.0.16
+module load java/11.0.18
 # picard needs R
 module load r/4.2.1-foss-2021a
 
