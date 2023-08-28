@@ -20,7 +20,7 @@ cd "$SLURM_SUBMIT_DIR"
 echo working dir is now $PWD
 
 ######### Modules #################
-module load r/4.2.1-foss-2021a
+module load r/4.1.0-foss-2021a
 module load bedtools/2.30.0-gcc-10.3.0
 ########## Set up dirs #################
 
