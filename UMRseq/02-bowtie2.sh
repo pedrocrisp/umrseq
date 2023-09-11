@@ -153,9 +153,8 @@ samtools view -c $outbam
 # get MAPQ distribution
 samtools view ${outbam} | \
 cut -f 5 | \
-sort | \
-uniq -c | \
-sort -k2 -n > ${outdir_stats}/${ID}_MAPQ_distribution.txt
+sort -n | \
+uniq -c > ${outdir_stats}/${ID}_MAPQ_distribution.txt
 
 # flagstat summary
 samtools flagstat ${outbam} \
