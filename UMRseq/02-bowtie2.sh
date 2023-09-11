@@ -45,6 +45,10 @@ fastqs_count=($fastqs)
 outdir="${reads_folder}_align_bowtie2"
 mkdir -p ${outdir}
 
+outdir_stats="${reads_folder}_align_bowtie2_stats"
+mkdir -p ${outdir_stats}
+
+
 # output structure
 outsam="${outdir}/${ID}.sam"
 tmpbam="${outdir}/${ID}.bam"
@@ -126,6 +130,9 @@ samtools view -c ${outsam}
 # if you want multialigning reads you will have lower this
 samtools view -q $q10filter -b -@ $bt2_threads $outsam | samtools sort -m 8G -@ $bt2_threads -o $outbam
 
+#Delete the temporary sam.
+rm -v ${outsam}
+
 #Make an index of the sorted bam file
 samtools index -c -@ $bt2_threads ${outbam}
 
@@ -133,5 +140,12 @@ samtools index -c -@ $bt2_threads ${outbam}
 echo "${ID} total alignments after MAPQ filter (should only include reads that map to one location)"
 samtools view -c $outbam
 
-#Delete the temporary sam.
-rm -v ${outsam}
+# get MAPQ distribution
+samtools view ${outbam} | \
+cut -f 5 | \
+sort | \
+uniq -c > ${outdir_stats}/${ID}_MAPQ_distribution.txt
+
+# flagstat summary
+samtools flagstat ${outbam} \
+ > ${outdir_stats}/${ID}_flagstat.txt
