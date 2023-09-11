@@ -123,8 +123,8 @@ blacklist <- gr_obj
 
 # set up samples
 # find file ending with ".bam"
-bam.files <- c(dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample1, "*.bam$"), full.names = T, ),
-               dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample2, "*.bam$"), full.names = T, ))
+bam.files <- c(dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample1, ".*\\.bam$"), full.names = T, ),
+               dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample2, ".*\\.bam$"), full.names = T, ))
 
 # get file names
 bam.files
