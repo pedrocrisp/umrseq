@@ -123,11 +123,21 @@ fi
 echo "${ID} total alignments before MAPQ filter (might include reads that map to multiple locations)"
 samtools view -c ${outsam}
 
-###### sort and index
+###### sort, filter and index
 # In Bowtie2, a read that aligns to more than 1 site equally well is never given higher than a MAPQ of 1
 # (even if it aligns to only 2 sites equally well as discussed above).
-# use mapq 10 recommended for most purposes
-# if you want multialigning reads you will have lower this
+
+# if -k is set
+# For read with more than one valid alignment, but the second alignment is score is lower (worse) than the first:
+# Each reported read or pair alignment beyond the first has the SAM 'secondary' bit (which equals 256) and a MAPQ of 255.
+
+# If -k is not set then only the 'best' alignment (best alignment it found before it stopped looking) will be reported.
+# If the best alignment had another equal best location, it gets MAPQ1 and reports one of them
+# if it was a unique best, its gets a good score
+# No reads with have secondary alignments bits (MAPQ 225) if -k is not set; but hits is fine as we dont really care about second best alignments (maybe we should?) 
+
+# MAPQ filter 10 recommended for most purposes, this remove low quality and multialigning reads (MAPQ 1)
+# If you want multialigning reads you will have lower this to 1
 samtools view -q $q10filter -b -@ $bt2_threads $outsam | samtools sort -m 8G -@ $bt2_threads -o $outbam
 
 #Delete the temporary sam.
@@ -144,7 +154,8 @@ samtools view -c $outbam
 samtools view ${outbam} | \
 cut -f 5 | \
 sort | \
-uniq -c > ${outdir_stats}/${ID}_MAPQ_distribution.txt
+uniq -c | \
+sort -k2 -n > ${outdir_stats}/${ID}_MAPQ_distribution.txt
 
 # flagstat summary
 samtools flagstat ${outbam} \
