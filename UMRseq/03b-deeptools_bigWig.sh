@@ -37,16 +37,26 @@ cd analysis
 mkdir -p ${bam_dir}_bigWigs_deeptools
 mkdir -p ${bam_dir}_insert_metrics
 mkdir -p ${bam_dir}_mosdepth
+mkdir -p ${bam_dir}_100bp_tiles
 
 ########## Run #################
 # make normalised bigWigs
-# ising --extendReads as suggested for contiguous mapping data like ChIP to map whole of PE frag
+# uising --extendReads as suggested for contiguous mapping data like ChIP to map whole of PE frag
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
 -o ${bam_dir}_bigWigs_deeptools/${ID}.bw \
 --binSize 10 \
 --normalizeUsing CPM \
 --extendReads \
+-p 2
+
+# also make megabase coverage plots to look at any genomie-wide trimmed_align_bowtie2_bigWigs_de
+bamCoverage \
+--bam $bam_dir/${ID}_sorted.bam \
+-o ${bam_dir}_100bp_tiles/${ID}.bedgraph \
+--binSize 100 \
+--normalizeUsing CPM \
+--outFileFormat bedgraph \
 -p 2
 
 # also make megabase coverage plots to look at any genomie-wide trimmed_align_bowtie2_bigWigs_deeptools
