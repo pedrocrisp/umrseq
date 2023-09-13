@@ -46,7 +46,7 @@ broad=no
 filter=no
 account=a_crisp
 
-while getopts ":i:r:o:A:m:c:t:s:p:C:Bfh" option; do
+while getopts ":i:r:o:A:m:c:t:s:p:C:D:Bfh" option; do
    case $option in
       i) sample_list=${OPTARG};;
       r) reads_folder=${OPTARG};;
