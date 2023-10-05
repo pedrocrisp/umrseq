@@ -32,18 +32,32 @@ window_spacing
 # 
 # # test directors
 # qsub -I -l walltime=24:00:00,nodes=1:ppn=4,mem=40gb -A UQ-SCI-SAFS
+
+# salloc \
+# --nodes=1 \
+# --ntasks-per-node=1 \
+# --cpus-per-task=4 \
+# --mem=10G \
+# --job-name=TEST \
+# --time=24:00:00 \
+# --partition=general \
+# --account=a_crisp \
+# srun \
+# --export=PATH,TERM,HOME,LANG \
+# --pty /bin/bash -l
+
 # cd /scratch/project/crisp006/pete/UMRseq_Aim2_run1_mach_II/maize_mach_II/analysis
-# module load R/3.5.0-gnu
+# module load r/4.2.1-foss-2022a
 # 
 # # load R
 # R
 # # blacklist
-# blacklist = "B_M_bams/B73_leaf3_V3_gDNA_test_peaks.narrowPeak"
+# blacklist = "B_M_bams_2/B73_leaf3_V3_gDNA_test_peaks.narrowPeak"
 # # data
-# path_to_data_files="B_M_bams"
+# path_to_data_files="B_M_bams_2"
 # 
 # # R -f ~/gitrepos/crisplab_epigenomics/methylome/11a-make_DMR_test_table.R --args samples_csaw.txt
-# DMR_contrasts_table_file="DMR_tests_combos_all_table.tsv"
+# DMR_contrasts_table_file="B_M_bams_2/DMR_tests_combos_all_table.tsv"
 # contrast = "B73_leaf3_V3.vs.Mo17_leaf3_V3"
 # 
 # filter_FC = 3
@@ -134,9 +148,9 @@ bam.files
 # bam.files <- bam.files[c(1,2,4,5)]
 # bam.files
 
-sample1_reps <- length(dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample1, "*.bam$"), full.names = T, ))
+sample1_reps <- length(dir(paste0(path_to_data_files), pattern = paste0("^", sample1, ".*\\.bam$"), full.names = T, ))
 
-sample2_reps <- length( dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample2, "*.bam$"), full.names = T, ))
+sample2_reps <- length( dir(paste0(path_to_data_files), pattern = paste0("^", sample2, ".*\\.bam$"), full.names = T, ))
 
 celltype <- c(rep(sample1, sample1_reps), rep(sample2, sample2_reps))
 celltype
@@ -177,7 +191,8 @@ win.data
 # this step takes a while
 bins <- windowCounts(bam.files, bin=TRUE, width=2000, param=param) 
 # identify windows to filter
-filter.stat <- filterWindows(win.data, bins, type="global")
+# filter.stat <- filterWindows(win.data, bins, type="global")
+filter.stat <- filterWindowsGlobal(win.data, bins)
 min.fc <- as.double(filter_FC)
 keep <- filter.stat$filter > log2(min.fc)
 summary(keep)
@@ -215,7 +230,8 @@ xlab="Average abundance", ylab="Log-fold change")
 dev.off()
 
 # determine offsets for normalisation
-offsets <- normOffsets(filtered.data, type="loess", se.out=FALSE) 
+# offsets <- normOffsets(filtered.data, type="loess", se.out=FALSE) 
+offsets <- normOffsets(filtered.data, se.out=FALSE) 
 head(offsets)
 
 #The effect of non-linear normalization can be visualized with a mean-difference plot comparing the first and last librar- ies. Once the offsets are applied to adjust the log-fold changes, the trend is eliminated from the plot (Figure 4). The cloud of points is also centred at a log-fold change of zero. This indicates that normalization was successful in remov- ing the differences between libraries.
@@ -302,6 +318,30 @@ head(res$table)
 # Controlling the FDR across regions. One might attempt to control the FDR by applying the Benjamini-Hochberg (BH) method to the window-level p-values (Benjamini & Hochberg, 1995). However, the features of interest are not windows, but the genomic regions that they represent. Control of the FDR across windows does not guarantee control of the FDR across regions (Lun & Smyth, 2014). The latter is arguably more relevant for the final interpretation of the results.
 # Control of the region-level FDR can be provided by aggregating windows into regions and combining the p-values. Here, adjacent windows less than 100 bp apart are aggregated into clusters. Each cluster represents a genomic region. Smaller values of tol allow distinct marking events to kept separate, while larger values provide a broader perspective, e.g., by considering adjacent co-regulated sites as a single entity. Chaining effects are mitigated by setting a maximum cluster width of 5 kbp.
 merged <- mergeWindows(rowRanges(filtered.data),tol=100, max.width=5000)
+summary(merged)
+
+# [99973] 13879 13879 13879 13880 13880 13880 13880 13880 13880 13880 13880 13880
+# [99985] 13880 13880 13880 13880 13880 13880 13880 13881 13881 13881 13881 13881
+# [99997] 13881 13881 13881
+# [ reached getOption("max.print") -- omitted 1907610 entries ]
+# 
+# $regions
+# GRanges object with 292616 ranges and 0 metadata columns:
+#   seqnames        ranges strand
+# <Rle>     <IRanges>  <Rle>
+#   [1]        1     1951-2250      *
+#   [2]        1   15551-16100      *
+#   [3]        1   16851-17550      *
+#   [4]        1   20201-20650      *
+#   [5]        1   22101-23250      *
+#   ...      ...           ...    ...
+# [292612]       Pt      451-1050      *
+#   [292613]       Pt     8251-8600      *
+#   [292614]       Pt   10501-10850      *
+#   [292615]       Pt   56601-56750      *
+#   [292616]       Pt 110851-111100      *
+#   -------
+#   seqinfo: 267 sequences from an unspecified genome
 
 # A combined p-value is computed for each cluster using the method of Simes (1986), based on the p-values of the con- stituent windows. This represents the evidence against the global null hypothesis for each cluster, i.e., that no DB exists in any of its windows. Rejection of this global null indicates that the cluster (and the region that it represents) contains DB. Applying the BH method to the combined p-values allows the region-level FDR to be controlled.
 tabcom <- combineTests(merged$id, res$table)
@@ -323,6 +363,26 @@ head(tabcom)
 # 4          up
 # 5          up
 # 6          up
+
+# output changed:
+
+# DataFrame with 6 rows and 8 columns
+# num.tests num.up.logFC num.down.logFC    PValue       FDR   direction
+# <integer>    <integer>      <integer> <numeric> <numeric> <character>
+#   1         5            0              5 0.0383388 0.1608232        down
+# 2         8            0              0 0.0957125 0.3134493        down
+# 3        13            0              5 0.0029195 0.0209042        down
+# 4         8            0              0 0.0970235 0.3166521        down
+# 5        20            0              0 0.1281570 0.3822088        down
+# 6         6            0              4 0.0348355 0.1499119        down
+# rep.test rep.logFC
+# <integer> <numeric>
+#   1         4  -1.61263
+# 2         8  -1.54972
+# 3        24  -2.28835
+# 4        29  -1.20091
+# 5        42  -1.58039
+# 6        57  -1.24365
 
 # Each row of the output table contains the statistics for a single cluster, including the combined p-value before and after the BH correction. The nWindows field describes the total number of windows in the cluster. The logFC.up and logFC.down fields describe the number of windows with a log-fold change above 0.5 or below -0.5 in each cluster, respectively. This can be used to determine the direction of DB in each cluster.
 
