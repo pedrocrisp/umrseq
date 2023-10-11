@@ -50,7 +50,7 @@ bamCoverage \
 --extendReads \
 -p 2
 
-# also make megabase coverage plots to look at any genomie-wide trimmed_align_bowtie2_bigWigs_de
+# also make 100bp tile coverage plots to compare to other 100bp tile data (eg WGBS)
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
 -o ${bam_dir}_100bp_tiles/${ID}.bedgraph \
