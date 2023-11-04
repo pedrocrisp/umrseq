@@ -7,6 +7,7 @@ bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <chrom.sizes file> <referen
 "
 
 # NOTE: NOT USING THIS SCRIPT ANY MORE - USING 03b - DEEPTOOLS TO DO THE BINNING
+# 2023-11-04 IN DEV AGAIN - confirm with Pete or Vanessa whether it worked
 
 #define stepo in the pipeline - should be the same name as the script
 step=04-bed_tiles
