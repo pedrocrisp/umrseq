@@ -42,6 +42,11 @@ mkdir -p tiles
 # reference_tile_file="/90days/uqpcrisp/tmp_refseqs/Nbenth/sites/NbLab330.genome_100bp_tiles.bed"
 # CPM_filter_UMRs=0.5
 
+# reference tile file format:
+# head Sbicolor_454_v3.0.1_100bp_tiles.sorted.bed
+# Chr01   0       100     Chr01:0-100
+# Chr01   100     200     Chr01:100-200
+
 # bedgraph
 # -dz 0-based co-ordinates, reporting per base
 # not reporting bases with 0 coverage
