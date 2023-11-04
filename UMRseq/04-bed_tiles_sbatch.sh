@@ -3,13 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <chrom.sizes file> <reference_tile_file> <walltime> <memory> <account_department>
-for example:
-bash \
-/home/springer/pcrisp/gitrepos/springerlab_methylation/SeqCap/07-tiles_bed_to_bigWig_sbatch.sh \
-single_sample.txt \
-/home/springer/pcrisp/ws/refseqs/maize/Zea_mays.AGPv4.dna.toplevel.chrom.sizes \
-/home/springer/pcrisp/ws/refseqs/maize/maize_v4_100pb_tiles_zBased_sites.txt
+bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <chrom.sizes file> <reference_tile_file> <bam_dir> <CPM_filter> <walltime> <memory> <account_department>
 "
 
 # NOTE: NOT USING THIS SCRIPT ANY MORE - USING 03b - DEEPTOOLS TO DO THE BINNING
