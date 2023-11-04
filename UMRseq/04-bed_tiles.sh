@@ -31,7 +31,7 @@ echo sample being mapped is $ID
 
 #make adaligned folder bsmaped
 cd analysis
-mkdir -p bedgraphs
+mkdir -p tmp_beds_for_tiles
 mkdir -p tiles
 
 ########## Run #################
@@ -43,13 +43,15 @@ mkdir -p tiles
 # CPM_filter_UMRs=0.5
 
 # bedgraph
-bedtools genomecov -bgd -ibam $bam_dir/${ID}_sorted.bam -g $chrom_sizes | LC_COLLATE=C sort -k1,1 -k2,2n - > bedgraphs/${ID}_sorted.bedgraph
+# -dz 0-based co-ordinates, reporting per base
+# not reporting bases with 0 coverage
+bedtools genomecov -dz -ibam $bam_dir/${ID}_sorted.bam -g $chrom_sizes | LC_COLLATE=C sort -k1,1 -k2,2n - > tmp_beds_for_tiles/${ID}_sorted.bed
 
 #### summarise coverage into 100bp tiles
 # previously I used 5' coverage only and also the -a option to includes 0 counts, but not sure this is useful anymore...
 
 # use closest to overlap with 100bp tile then summarise with groupby
-bedtools closest -t all -a bedgraphs/${ID}_sorted.bedgraph -b $reference_tile_file |
+bedtools closest -t all -a tmp_beds_for_tiles/${ID}_sorted.bed -b $reference_tile_file |
 bedtools groupby -g 5,6,7 -c 4 > tiles/${ID}_100bp.bed
 
 #### normalise to CPM
@@ -62,9 +64,12 @@ awk -F$"\\t" -v norm_factor=$norm_factor 'BEGIN {OFS = FS} {
 }' "tiles/${ID}_100bp.bed" > tiles/${ID}_100bp_CPM.bed
 
 #### filter
+#### merge bookended UMRs
+# implemented a CPM filter, but not sure if we will use this filtered file or not - keeping for now
 awk -v CPM_filter_UMRs=$CPM_filter_UMRs '$4 > CPM_filter_UMRs' tiles/${ID}_100bp_CPM.bed |
 bedtools merge -c 4 -o sum -i - > tiles/${ID}_100bp_CPM_${CPM_filter_UMRs}_UMRs.bed
 
-#### merge to call UMRs
+# uncomment once script dev is finished to delete the large intermediate bed file
+# rm -rv tmp_beds_for_tiles
 
 echo finished summarising
