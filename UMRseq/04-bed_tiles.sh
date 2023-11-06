@@ -40,6 +40,7 @@ mkdir -p tiles
 # ID="UMR_McrBC_MF_90"
 # chrom_sizes="/90days/uqpcrisp/tmp_refseqs/Nbenth/NbLab330.genome.chrom.sizes"
 # reference_tile_file="/90days/uqpcrisp/tmp_refseqs/Nbenth/sites/NbLab330.genome_100bp_tiles.bed"
+# reference_tile_file=~/refseqs/maize/sites/Zea_mays.AGPv4.dna.toplevel_100bp_tiles_sorted.bed
 # CPM_filter_UMRs=0.5
 
 # reference tile file format:
@@ -50,7 +51,9 @@ mkdir -p tiles
 # bedgraph
 # -dz 0-based co-ordinates, reporting per base
 # not reporting bases with 0 coverage
-bedtools genomecov -dz -ibam $bam_dir/${ID}_sorted.bam -g $chrom_sizes | LC_COLLATE=C sort -k1,1 -k2,2n - > tmp_beds_for_tiles/${ID}_sorted.bed
+bedtools genomecov -dz -ibam $bam_dir/${ID}_sorted.bam -g $chrom_sizes | \
+awk -F$"\\t" -v s=1 'BEGIN {OFS = FS} {print $1, $2, $2+s, $3}' - | \
+LC_COLLATE=C sort -k1,1 -k2,2n - > tmp_beds_for_tiles/${ID}_sorted.bed
 
 #### summarise coverage into 100bp tiles
 # previously I used 5' coverage only and also the -a option to includes 0 counts, but not sure this is useful anymore...
