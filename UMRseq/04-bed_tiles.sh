@@ -48,6 +48,11 @@ mkdir -p tiles
 # Chr01   0       100     Chr01:0-100
 # Chr01   100     200     Chr01:100-200
 
+# NOTE: we realised this approach has 2 shortcomings
+# 1. it doesnt remove overlapping portions of PE reads which will have double coverage
+# 2. it doesnt extend reads to represent the whole fragement
+# consider improving the code to deal with these issues...
+
 # bedgraph
 # -dz 0-based co-ordinates, reporting per base
 # not reporting bases with 0 coverage
