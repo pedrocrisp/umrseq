@@ -59,7 +59,7 @@ mkdir -p ${bam_dir}_100bp_tiles
 
 ########## Run #################
 # make normalised bigWigs
-# uising --extendReads as suggested for contiguous mapping data like ChIP to map whole of PE frag
+# using --extendReads as suggested for contiguous mapping data like ChIP to map whole of PE frag
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
 -o ${bam_dir}_bigWigs_deeptools/${ID}.bw \
