@@ -53,6 +53,7 @@ mkdir -p ${bam_dir}_bigWigs_deeptools
 mkdir -p ${bam_dir}_insert_metrics
 mkdir -p ${bam_dir}_mosdepth
 mkdir -p ${bam_dir}_100bp_tiles
+mkdir -p ${bam_dir}_big_tiles
 
 # NOTE: do we need to clip overlapping reads?
 # compare to bams and see what the script actually does
@@ -95,7 +96,7 @@ bamCoverage \
 # also make megabase coverage plots to look at any genomie-wide trimmed_align_bowtie2_bigWigs_deeptools
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_bigWigs_deeptools/${ID}.bed \
+-o ${bam_dir}_big_tiles/${ID}.bed \
 --binSize 1000000 \
 --normalizeUsing CPM \
 --extendReads \
@@ -105,7 +106,7 @@ bamCoverage \
 # also make Kb coverage plots to look at plamids in transgeen free exp trimmed_align_bowtie2_bigWigs_deeptools
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_bigWigs_deeptools/${ID}_1000bin.bed \
+-o ${bam_dir}_big_tiles/${ID}_1000bin.bed \
 --binSize 1000 \
 --normalizeUsing CPM \
 --extendReads \
