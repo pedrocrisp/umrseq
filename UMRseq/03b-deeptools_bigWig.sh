@@ -21,7 +21,22 @@ echo working dir is now $PWD
 
 ########## Modules #################
 # dependencies
-# conda env with deeptools and mosdepth installed
+# conda env with deeptools-hacked and mosdepth installed
+# conda create deeptools-hacked python=3.7
+# conda activate deeptools-hacked
+# conda install -c bioconda deeptools=3.5.1
+# in "writeBedGraph.py"
+# eg found in: ~/miniconda3/pkgs/deeptools-3.5.1-pyhdfd78af_1/site-packages/deeptools
+# uncomment:
+#  # uncomment these lines if fixed step bedgraph is required
+#            if not np.isnan(value):
+#                writeStart = start + tileIndex * self.binLength
+#                writeEnd  =  min(writeStart + self.binLength, end)
+#                _file.write(line_string.format(chrom, writeStart,
+#                                               writeEnd, value))
+#            continue
+#
+
 conda activate $conda_enviro
 
 ########## Set up dirs #################
@@ -38,6 +53,9 @@ mkdir -p ${bam_dir}_bigWigs_deeptools
 mkdir -p ${bam_dir}_insert_metrics
 mkdir -p ${bam_dir}_mosdepth
 mkdir -p ${bam_dir}_100bp_tiles
+
+# NOTE: do we need to clip overlapping reads?
+# compare to bams and see what the script actually does
 
 ########## Run #################
 # make normalised bigWigs
@@ -56,6 +74,7 @@ bamCoverage \
 -o ${bam_dir}_100bp_tiles/${ID}.bedgraph \
 --binSize 100 \
 --normalizeUsing CPM \
+--extendReads \
 --outFileFormat bedgraph \
 -p 2
 
@@ -65,6 +84,7 @@ bamCoverage \
 -o ${bam_dir}_bigWigs_deeptools/${ID}.bedgraph \
 --binSize 1000000 \
 --normalizeUsing CPM \
+--extendReads \
 --outFileFormat bedgraph \
 -p 2
 
@@ -74,6 +94,7 @@ bamCoverage \
 -o ${bam_dir}_bigWigs_deeptools/${ID}_1000bin.bedgraph \
 --binSize 1000 \
 --normalizeUsing CPM \
+--extendReads \
 --outFileFormat bedgraph \
 -p 2
 
