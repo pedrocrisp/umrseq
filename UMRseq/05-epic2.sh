@@ -45,10 +45,24 @@ mkdir -p ${bam_dir}_epic2
 # call peaks
 # 50 bp bins gives good resolution on UMRs
 
+# this implementation does not use a background library
+# can also be run in df mode to compare samples
+
 epic2 \
 --treatment $bam_dir/${ID}_sorted.bam \
 --bin-size 50 \
 --chromsizes $chrom_sizes_file \
 --output ${bam_dir}_epic2/${ID}.50.epic2
+
+# outout
+# ChIPCount is the coverage metric
+# score is somethign internal to scicer and doesent mean much unless run with an input background library
+# https://github.com/biocore-ntnu/epic2
+
+# #Chromosome     Start   End     ChIPCount       Score   Strand
+# 1       15600   16099   25      30.58030867576599       .
+# 1       16950   17449   116     1188.359456539154       .
+# 1       22000   25449   277     474.23892998695374      .
+# 1       43600   44849   99      146.5398440361023       .
 
 echo finished summarising
