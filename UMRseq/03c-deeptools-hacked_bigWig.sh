@@ -64,6 +64,10 @@ mkdir -p ${bam_dir}_big_tiles
 # try making 1bp bins for higher res coverage calculation 
 # if we are going to use the .bw for pulling coverage, this may increase precision eg in correlations between samples?
 
+## should we skip zeros when using bamCoverage???
+## skipping zeros would make files much smaller
+## skipping zeros might impact coverage comparsions between samples depending on tool used for making comparisons...
+
 # 1 bp bins for higher res
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
