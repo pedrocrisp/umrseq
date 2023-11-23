@@ -54,6 +54,12 @@ epic2 \
 --chromsizes $chrom_sizes_file \
 --output ${bam_dir}_epic2/${ID}.50.epic2
 
+# remove header to make bed file
+grep -v "^#" ${bam_dir}_epic2/${ID}.50.epic2 > ${bam_dir}_epic2/${ID}.50.epic2.bed
+
+# remove file with header
+rm ${bam_dir}_epic2/${ID}.50.epic2
+
 # outout
 # ChIPCount is the coverage metric
 # score is somethign internal to scicer and doesent mean much unless run with an input background library
