@@ -19,7 +19,7 @@ highres=$6
 #RPGC=$6
 account_department=$7
 
-if [ "$#" -lt "6" ]
+if [ "$#" -lt "7" ]
 then
 echo $usage
 exit -1
