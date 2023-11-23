@@ -68,7 +68,11 @@ mkdir -p ${bam_dir}_big_tiles
 ## skipping zeros would make files much smaller
 ## skipping zeros might impact coverage comparsions between samples depending on tool used for making comparisons...
 
+if [ "$highres" == "highres" ]
+then
+echo making high-res 1bp resolution bigwig files **caution** these are big files
 # 1 bp bins for higher res
+# use for measuring and comparing coverage
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
 -o ${bam_dir}_bigWigs_deeptools/${ID}.1.bw \
@@ -76,8 +80,13 @@ bamCoverage \
 --normalizeUsing CPM \
 --extendReads \
 -p 2
+fi
 
-# 10 bp bins for smaller files? (compare files size)
+# 10 bp bins for smaller files
+# 10x smaller than the 1bp files
+# this size is probably enough if all we want to do is visualise in igv 
+# also probably sufficient res for most coverage comparisons
+## (use for IGV)
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
 -o ${bam_dir}_bigWigs_deeptools/${ID}.10.bw \
@@ -88,19 +97,21 @@ bamCoverage \
 
 # also make 100bp tile coverage plots to compare to other 100bp tile data (eg WGBS)
 # output as bed file
+# skip zeros (can impute later if needed)
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
 -o ${bam_dir}_100bp_tiles/${ID}.bed \
 --binSize 100 \
 --normalizeUsing CPM \
 --extendReads \
+--skipNAs \
 --outFileFormat bedgraph \
 -p 2
 
 # also make megabase coverage plots to look at any genomie-wide trimmed_align_bowtie2_bigWigs_deeptools
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_big_tiles/${ID}.bed \
+-o ${bam_dir}_big_tiles/${ID}_1Mb.bed \
 --binSize 1000000 \
 --normalizeUsing CPM \
 --extendReads \
