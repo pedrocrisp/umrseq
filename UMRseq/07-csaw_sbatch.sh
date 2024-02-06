@@ -8,7 +8,7 @@ bash 07-csaw_sbatch.sh <contrasts_list.txt> <walltime> <memory> <DMR_contrasts_t
 <genome_annotation> <chromosome_sizes> <TE_annotation> <account_department>
 "
 
-#define stepo in the pipeline - should be the same name as the script
+#define step in the pipeline - should be the same name as the script
 step=07-csaw
 
 ######### Setup ################
