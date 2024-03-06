@@ -66,6 +66,15 @@ window_spacing
 ###########################
 ########
 ###########################
+
+# if you need to install csaw:
+
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+# 
+# BiocManager::install("csaw")
+# BiocManager::install("rtracklayer")
+
 library(tidyverse)
 library(csaw)
 library(rtracklayer)
@@ -137,6 +146,8 @@ blacklist <- gr_obj
 
 # set up samples
 # find file ending with ".bam"
+# files must start sample group follow by "." eg "morex.1", "morex.2"
+# this prevent errors from similar samples with different suffix eg "RGTplant" and "RGTplant_callus"
 bam.files <- c(dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample1, ".*\\.bam$"), full.names = T, ),
                dir(paste0(path_to_data_files, "/"), pattern = paste0("^", sample2, ".*\\.bam$"), full.names = T, ))
 

@@ -5,8 +5,10 @@ set -xeuo pipefail
 usage="USAGE:
 bash 07-csaw_sbatch.sh <contrasts_list.txt> <walltime> <memory> <DMR_contrasts_table_file>
 <path_to_data_files> <blacklist> <filter_FC> <bin_size> <window_spacing>
-<genome_annotation> <chromosome_sizes> <TE_annotation> <account_department>
+<account_department>
 "
+
+# <genome_annotation> <chromosome_sizes> <TE_annotation>
 
 #define step in the pipeline - should be the same name as the script
 step=07-csaw
@@ -21,13 +23,13 @@ blacklist=$6
 filter_FC=$7
 bin_size=$8
 window_spacing=$9
-genome_annotation=${10}
-chromosome_sizes=${11}
-TE_annotation=${12}
-account_department=${13}
+# genome_annotation=${10}
+# chromosome_sizes=${11}
+# TE_annotation=${12}
+account_department=${10}
 
 
-if [ "$#" -lt "12" ]
+if [ "$#" -lt "10" ]
 then
 echo $usage
 exit -1
@@ -88,7 +90,7 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},DMR_contrasts_table_file=$DMR_contrasts_table_file,path_to_data_files=$path_to_data_files,blacklist=$blacklist,filter_FC=$filter_FC,bin_size=$bin_size,window_spacing=$window_spacing,genome_annotation=$genome_annotation,chromosome_sizes=$chromosome_sizes,TE_annotation=$TE_annotation \
+--export LIST=${sample_list},DMR_contrasts_table_file=$DMR_contrasts_table_file,path_to_data_files=$path_to_data_files,blacklist=$blacklist,filter_FC=$filter_FC,bin_size=$bin_size,window_spacing=$window_spacing \
 --account $account_department \
 $script_to_sbatch
 
