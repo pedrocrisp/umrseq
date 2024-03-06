@@ -325,6 +325,9 @@ head(res$table)
 # 5 0.3156714 -0.9548798 0.09678204 0.7599154
 # 6 0.3707627 -0.8507514 0.14431459 0.7092391
 
+is.sig.bins <- res$table$FDR <= 0.05
+summary(is.sig.bins)
+
 # region level FDR correction
 # Controlling the FDR across regions. One might attempt to control the FDR by applying the Benjamini-Hochberg (BH) method to the window-level p-values (Benjamini & Hochberg, 1995). However, the features of interest are not windows, but the genomic regions that they represent. Control of the FDR across windows does not guarantee control of the FDR across regions (Lun & Smyth, 2014). The latter is arguably more relevant for the final interpretation of the results.
 # Control of the region-level FDR can be provided by aggregating windows into regions and combining the p-values. Here, adjacent windows less than 100 bp apart are aggregated into clusters. Each cluster represents a genomic region. Smaller values of tol allow distinct marking events to kept separate, while larger values provide a broader perspective, e.g., by considering adjacent co-regulated sites as a single entity. Chaining effects are mitigated by setting a maximum cluster width of 5 kbp.
