@@ -426,7 +426,7 @@ head(tabbest)
 
 # In the above table, each row contains the statistics for each cluster. Of interest are the best and logFC fields. The former is the index of the window that is the most significant in each cluster, while the latter is the log-fold change of that window. This can be used to obtain a summary of the direction of DB across all clusters/regions.
 
-is.sig.pos <- (tabbest$logFC > 0)[is.sig]
+is.sig.pos <- (tabbest$rep.logFC > 0)[is.sig]
 summary(is.sig.pos)
 #    Mode   FALSE    TRUE 
 # logical   41524   23922 
@@ -440,8 +440,8 @@ summary(is.sig.pos)
 out.ranges <- merged$region
 
 elementMetadata(out.ranges) <- data.frame(tabcom,
-   best.pos=mid(ranges(rowRanges(filtered.data[tabbest$best]))), 
-   best.logFC=tabbest$logFC) 
+   best.pos=mid(ranges(rowRanges(filtered.data[tabbest$rep.test]))), 
+   best.logFC=tabbest$rep.logFC) 
 
 # # uncomment to save the RDS file
 #########
