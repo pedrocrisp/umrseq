@@ -20,7 +20,6 @@ cd "$SLURM_SUBMIT_DIR"
 echo working dir is now $PWD
 
 ########## Modules #################
-module load r/4.2.1-foss-2022a
 conda activate $conda_enviro
 # dependencies
 # conda env with deeptools-hacked and mosdepth installed
@@ -39,6 +38,7 @@ conda activate $conda_enviro
 #                                               writeEnd, value))
 #            continue
 #
+module load r/4.2.1-foss-2022a
 ########## Set up dirs #################
 
 #get job ID
