@@ -3,6 +3,19 @@
 #SBATCH --requeue
 #SBATCH --partition=general
 
+########## Versions #################
+# it is recommended to use the deeptool-hacked script and install deeptool hacked (ie this script!)
+
+# this version is the original that was run with the standard install of deeptools which merges adjacent tiles with the same value (bedgraph style)
+# the deeptools-hacked script was designed to run the hacked version of deep tools which does not merge adjacent tiles even if they are the same value, this works better with downstream code that expects 100 bp tiles only
+# Both version of the deeptools script can run with a normal or a hacked deeptools install, so check which conda env you are using and whether you hacked deeptools
+# If you are only using deeptools to mkae files to visualise in IGV then it doesnt matter if you are using the hacked or the normal deeptools
+# If you are using deeptools to make eg bigwig or bed files to look at read coverage, then it *might* matter which version you are using depending how you are averaging tiles or comparing tiles between samples - in this case use the hacked install
+
+# tl;dr
+# if making IGV files only and you aready used normal deeptools install and script, this is fine
+# if using deeptools outputs (ie this does not apply to bams) to plot coverage, compare samples or compare tiles, then use hacked-deeptools
+
 ########## QC #################
 set -xeuo pipefail
 
@@ -24,6 +37,7 @@ echo working dir is now $PWD
 # conda env with deeptools-hacked and mosdepth installed
 # conda create deeptools-hacked python=3.7
 # conda activate deeptools-hacked
+# conda install -c bioconda mosdepth
 # conda install -c bioconda deeptools=3.5.1
 # in "writeBedGraph.py"
 # eg found in: ~/miniconda3/pkgs/deeptools-3.5.1-pyhdfd78af_1/site-packages/deeptools
