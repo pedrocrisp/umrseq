@@ -38,7 +38,6 @@ conda activate $conda_enviro
 #                                               writeEnd, value))
 #            continue
 #
-module load r/4.2.1-foss-2022a
 ########## Set up dirs #################
 
 #get job ID
@@ -82,6 +81,8 @@ plotHeatmap \
 -out ${out_dir}/${ID}.mat_heatmap.png
 
 # Run R module to creat 100bp tile bed file
+module load r/4.2.1-foss-2022a
+
 R -f ~/gitrepos/umrseq/UMRseq/06-cov_feature_summarise.R \
 --args $ID $out_dir
 
