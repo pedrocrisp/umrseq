@@ -93,6 +93,7 @@ bamCoverage \
 --binSize 1 \
 --normalizeUsing CPM \
 --extendReads \
+--blackListFileName $blacklist \
 -p 2
 fi
 
@@ -107,6 +108,7 @@ bamCoverage \
 --binSize 10 \
 --normalizeUsing CPM \
 --extendReads \
+--blackListFileName $blacklist \
 -p 2
 
 # also make 100bp tile coverage plots to compare to other 100bp tile data (eg WGBS)
@@ -120,9 +122,11 @@ bamCoverage \
 --extendReads \
 --skipNAs \
 --outFileFormat bedgraph \
+--blackListFileName $blacklist \
 -p 2
 
 # also make megabase coverage plots to look at any genomie-wide trimmed_align_bowtie2_bigWigs_deeptools
+# --blackListFileName $blacklist is not used in this step as behavour is untested - would it skip an entire Mb tile if it had a 100bp of blacklisted bps???
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
 -o ${bam_dir}_big_tiles/${ID}_1Mb.bed \
@@ -133,6 +137,7 @@ bamCoverage \
 -p 2
 
 # also make Kb coverage plots to look at plamids in transgeen free exp trimmed_align_bowtie2_bigWigs_deeptools
+# --blackListFileName $blacklist is not used in this step as behavour is untested - would it skip an entire Mb tile if it had a 100bp of blacklisted bps???
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
 -o ${bam_dir}_big_tiles/${ID}_1000bin.bed \
