@@ -17,6 +17,7 @@ bigwig_dir=$4
 out_dir=$5
 feature_bed=$6
 conda_enviro=$7
+account_department=$8
 
 if [ "$#" -lt "7" ]
 then
