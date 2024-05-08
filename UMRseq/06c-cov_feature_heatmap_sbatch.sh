@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 03-bed_bigWig_tiles_qsub.sh <sample_list.txt> <walltime> <memory> <bigWig folder> <out folder> <feature bed file>
+bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <walltime> <memory> <bigWig folder> <out folder> <feature bed file>
 Use this script to remake the heatmap woth additional args
 "
 
@@ -18,8 +18,10 @@ mat_dir=$4
 out_dir=$5
 y_min=$6
 y_max=$7
+conda_enviro=$8
+account_department=$9
 
-if [ "$#" -lt "5" ]
+if [ "$#" -lt "9" ]
 then
 echo $usage
 exit -1
@@ -32,11 +34,11 @@ fi
 number_of_samples=`wc -l $sample_list | awk '{print $1}'`
 if [[ "$number_of_samples" -eq 1 ]]
 then
-qsub_t=1
+sbatch_t=1
 else
-qsub_t="1-${number_of_samples}"
+sbatch_t="1-${number_of_samples}"
 fi
-echo "argument to be passed to qsub -t is '$qsub_t'"
+echo "argument to be passed to sbatch -t is '$sbatch_t'"
 
 #find script to run, makes it file system agnostic
 if
@@ -65,16 +67,21 @@ log_folder=logs/${timestamp}_${step}
 mkdir $log_folder
 
 #script path and cat a record of what was run
-script_to_qsub=${scriptdir}/${step}.sh
-cat $script_to_qsub > ${log_folder}/script.log
-cat $0 > ${log_folder}/qsub_runner.log
+script_to_sbatch=${scriptdir}/${step}.sh
+cat $script_to_sbatch > ${log_folder}/script.log
+cat $0 > ${log_folder}/sbatch_runner.log
 
-#submit qsub and pass args
+#submit sbatch and pass args
 #-o and -e pass the file locations for std out/error
-#-v additional variables to pass to the qsub script including the PBS_array list and the dir structures
-qsub -J $qsub_t \
--l walltime=${walltime},nodes=1:ppn=1,mem=${mem}gb \
--o ${log_folder}/${step}_o^array_index^ \
--e ${log_folder}/${step}_e^array_index^ \
--v LIST=${sample_list},out_dir=${out_dir},mat_dir=${mat_dir},y_min=${y_min},y_max=${y_max} \
-$script_to_qsub
+#--export additional variables to pass to the sbatch script including the array list and the dir structures
+sbatch --array $sbatch_t \
+-t ${walltime} \
+-N 1 \
+-n 1 \
+--cpus-per-task 1 \
+--mem ${mem}gb \
+-o ${log_folder}/${step}_o_%A_%a \
+-e ${log_folder}/${step}_e_%A_%a \
+--export LIST=${sample_list},out_dir=${out_dir},mat_dir=${mat_dir},y_min=${y_min},y_max=${y_max},conda_enviro=${conda_enviro} \
+--account $account_department \
+$script_to_sbatch
