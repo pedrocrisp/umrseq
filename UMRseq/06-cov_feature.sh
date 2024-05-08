@@ -51,7 +51,7 @@ mkdir -p $out_dir
 # deeptools to make coverage matrix
 # summarise 2kb either side of feature
 # -p 8 threds
-# skip regions with only zeros
+# skip regions with only zeros - I removed this arg but not sure if that might break something now, not 100% of behaviour
 # treat missing data as zero
 computeMatrix scale-regions \
 -R $feature_bed \
@@ -60,7 +60,6 @@ computeMatrix scale-regions \
 -p 2 \
 --regionBodyLength 300 \
 --missingDataAsZero \
---skipZeros \
 --sortRegions descend \
 -o ${out_dir}/${ID}.mat.gz \
 --outFileNameMatrix ${out_dir}/${ID}.mat_values.tab \
