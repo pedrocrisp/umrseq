@@ -20,9 +20,25 @@ cd "$SLURM_SUBMIT_DIR"
 echo working dir is now $PWD
 
 ########## Modules #################
-# conda activate py3.7
-# module load R/3.5.0-gnu
+module load r/4.2.1-foss-2022a
 conda activate $conda_enviro
+# dependencies
+# conda env with deeptools-hacked and mosdepth installed
+# conda create deeptools-hacked python=3.7
+# conda activate deeptools-hacked
+# conda install -c bioconda mosdepth
+# conda install -c bioconda deeptools=3.5.1
+# in "writeBedGraph.py"
+# eg found in: ~/miniconda3/pkgs/deeptools-3.5.1-pyhdfd78af_1/site-packages/deeptools
+# uncomment:
+#  # uncomment these lines if fixed step bedgraph is required
+#            if not np.isnan(value):
+#                writeStart = start + tileIndex * self.binLength
+#                writeEnd  =  min(writeStart + self.binLength, end)
+#                _file.write(line_string.format(chrom, writeStart,
+#                                               writeEnd, value))
+#            continue
+#
 ########## Set up dirs #################
 
 #get job ID
@@ -64,5 +80,10 @@ plotProfile \
 plotHeatmap \
 -m ${out_dir}/${ID}.mat.gz \
 -out ${out_dir}/${ID}.mat_heatmap.png
+
+# Run R module to creat 100bp tile bed file
+R -f ~/gitrepos/umrseq/UMRseq/06-cov_feature_summarise.R \
+--args $ID $out_dir
+
 
 echo finished summarising
