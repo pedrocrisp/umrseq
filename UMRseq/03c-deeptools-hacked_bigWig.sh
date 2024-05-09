@@ -63,11 +63,11 @@ echo sample being mapped is $ID
 
 #make adaligned folder bsmaped
 cd analysis
-mkdir -p ${bam_dir}_bigWigs_deeptools
+mkdir -p ${bam_dir}_hacked_bw_deeptools
 mkdir -p ${bam_dir}_insert_metrics
 mkdir -p ${bam_dir}_mosdepth
-mkdir -p ${bam_dir}_100bp_tiles
-mkdir -p ${bam_dir}_big_tiles
+mkdir -p ${bam_dir}_hacked_100bp_tiles
+mkdir -p ${bam_dir}_hacked_big_tiles
 
 # NOTE: do we need to clip overlapping reads?
 # compare to bams and see what the script actually does
@@ -89,7 +89,7 @@ echo making high-res 1bp resolution bigwig files **caution** these are big files
 # use for measuring and comparing coverage
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_bigWigs_deeptools/${ID}.1.bw \
+-o ${bam_dir}_hacked_bw_deeptools/${ID}.1.bw \
 --binSize 1 \
 --normalizeUsing CPM \
 --extendReads \
@@ -104,7 +104,7 @@ fi
 ## (use for IGV)
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_bigWigs_deeptools/${ID}.10.bw \
+-o ${bam_dir}_hacked_bw_deeptools/${ID}.10.bw \
 --binSize 10 \
 --normalizeUsing CPM \
 --extendReads \
@@ -116,7 +116,7 @@ bamCoverage \
 # skip zeros (can impute later if needed)
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_100bp_tiles/${ID}.bed \
+-o ${bam_dir}_hacked_100bp_tiles/${ID}.bed \
 --binSize 100 \
 --normalizeUsing CPM \
 --extendReads \
@@ -129,7 +129,7 @@ bamCoverage \
 # --blackListFileName $blacklist is not used in this step as behavour is untested - would it skip an entire Mb tile if it had a 100bp of blacklisted bps???
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_big_tiles/${ID}_1Mb.bed \
+-o ${bam_dir}_hacked_big_tiles/${ID}_1Mb.bed \
 --binSize 1000000 \
 --normalizeUsing CPM \
 --extendReads \
@@ -140,7 +140,7 @@ bamCoverage \
 # --blackListFileName $blacklist is not used in this step as behavour is untested - would it skip an entire Mb tile if it had a 100bp of blacklisted bps???
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_big_tiles/${ID}_1000bin.bed \
+-o ${bam_dir}_hacked_big_tiles/${ID}_1000bin.bed \
 --binSize 1000 \
 --normalizeUsing CPM \
 --extendReads \
