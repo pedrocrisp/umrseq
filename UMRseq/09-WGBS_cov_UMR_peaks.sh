@@ -114,7 +114,7 @@ plotHeatmap \
 --dpi 1200 \
 --zMin 0 \
 --zMax 100 \
---colorMap PuRd
+--colorMap RdYlBu_r
 
 ########### CHH  ############
 computeMatrix scale-regions \
@@ -145,6 +145,6 @@ plotHeatmap \
 --dpi 1200 \
 --zMin 0 \
 --zMax 100 \
---colorMap PuRd
+--colorMap RdBu_r
 
 echo finished summarising
