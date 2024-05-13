@@ -82,7 +82,8 @@ plotHeatmap \
 --interpolationMethod nearest \
 --dpi 1200 \
 --zMin 0 \
---zMax 100
+--zMax 100 \
+--colorMap PuRd
 
 ########### CHG  ############
 computeMatrix scale-regions \
@@ -112,7 +113,8 @@ plotHeatmap \
 --interpolationMethod nearest \
 --dpi 1200 \
 --zMin 0 \
---zMax 100
+--zMax 100  \
+--colorMap PuRd
 
 ########### CHH  ############
 computeMatrix scale-regions \
@@ -142,6 +144,7 @@ plotHeatmap \
 --interpolationMethod nearest \
 --dpi 1200 \
 --zMin 0 \
---zMax 100
+--zMax 100  \
+--colorMap PuRd
 
 echo finished summarising
