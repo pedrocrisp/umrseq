@@ -39,7 +39,7 @@ echo sample being mapped is $ID
 
 #make adaligned folder bsmaped
 cd analysis
-mkdir -p ${bam_dir}_epic2
+mkdir -p ${bam_dir}_epic2_${bin_Size}
 
 ########## Run #################
 # call peaks
@@ -50,7 +50,7 @@ mkdir -p ${bam_dir}_epic2
 
 epic2 \
 --treatment $bam_dir/${ID}_sorted.bam \
---bin-size 50 \
+--bin-size $bin_Size \
 --chromsizes $chrom_sizes_file \
 --output ${bam_dir}_epic2/${ID}.50.epic2
 
