@@ -39,7 +39,7 @@ echo sample being mapped is $ID
 
 #make adaligned folder bsmaped
 cd analysis
-mkdir -p ${bam_dir}_epic2_${bin_Size}
+mkdir -p ${bam_dir}_epic2
 
 ########## Run #################
 # call peaks
@@ -52,13 +52,13 @@ epic2 \
 --treatment $bam_dir/${ID}_sorted.bam \
 --bin-size $bin_Size \
 --chromsizes $chrom_sizes_file \
---output ${bam_dir}_epic2/${ID}.50.epic2
+--output ${bam_dir}_epic2/${ID}.${bin_Size}.epic2
 
 # remove header to make bed file
-grep -v "^#" ${bam_dir}_epic2/${ID}.50.epic2 > ${bam_dir}_epic2/${ID}.50.epic2.bed
+grep -v "^#" ${bam_dir}_epic2/${ID}.${bin_Size}.epic2 > ${bam_dir}_epic2/${ID}.${bin_Size}.epic2.bed
 
 # remove file with header
-rm ${bam_dir}_epic2/${ID}.50.epic2
+rm ${bam_dir}_epic2/${ID}.${bin_Size}.epic2
 
 # outout
 # ChIPCount is the coverage metric
