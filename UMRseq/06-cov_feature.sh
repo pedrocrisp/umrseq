@@ -62,7 +62,7 @@ computeMatrix scale-regions \
 -S ${bigwig_dir}/${ID}.10.bw \
 -b 2000 -a 2000 \
 -p 2 \
---regionBodyLength 300 \
+--regionBodyLength 1000 \
 --missingDataAsZero \
 --sortRegions descend \
 -o ${out_dir}/${ID}.mat.gz \
