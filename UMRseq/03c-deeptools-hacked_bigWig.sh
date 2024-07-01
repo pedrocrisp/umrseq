@@ -186,6 +186,7 @@ java -jar ~/software/picard.jar CollectInsertSizeMetrics \
 I=$bam_dir/${ID}_sorted.bam \
 O=${bam_dir}_insert_metrics/${ID}_insert_size_metrics.txt \
 H=${bam_dir}_insert_metrics/${ID}_insert_size_histogram.pdf \
+CREATE_INDEX=FALSE \
 M=0.5
 
 echo finished summarising
