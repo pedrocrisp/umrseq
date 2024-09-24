@@ -27,6 +27,7 @@ module load macs2/2.2.9.1
 # conda create --name macs2 python=3.7
 # conda activate macs2
 # conda install -c bioconda macs2
+# macs2 2.2.6
 
 ###### Set up directories #####
 ID="$(/bin/sed -n ${SLURM_ARRAY_TASK_ID}p ${LIST})"
