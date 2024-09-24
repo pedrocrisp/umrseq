@@ -21,8 +21,9 @@ cd "$SLURM_SUBMIT_DIR"
 echo working dir is now $PWD
 
 ###### Modules ################
-# module load macs2
-conda activate $conda_enviro
+module load macs2/2.2.9.1
+# current module is 
+# conda activate $conda_enviro
 # conda create --name macs2 python=3.7
 # conda activate macs2
 # conda install -c bioconda macs2

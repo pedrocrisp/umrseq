@@ -58,7 +58,6 @@ while getopts ":i:r:o:A:m:c:t:s:p:C:D:Bfh" option; do
       s) genome_size=${OPTARG};;
       p) paired_end=${OPTARG};;
       C) control=${OPTARG};;
-      D) conda_enviro=${OPTARG};;
       B) broad=yes;;
       f) filter=yes;;
       h) # display Help
@@ -69,6 +68,9 @@ while getopts ":i:r:o:A:m:c:t:s:p:C:D:Bfh" option; do
          exit;;
    esac
 done
+
+# removed arg
+#  D) conda_enviro=${OPTARG};;
 
 
 #define stepo in the pipeline - should be the same name as the script
@@ -152,7 +154,9 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},paired_end=$paired_end,genome_size=$genome_size,broad=$broad,reads_folder=${reads_folder},filter=$filter,control=${control},conda_enviro=${conda_enviro} \
+--export LIST=${sample_list},paired_end=$paired_end,genome_size=$genome_size,broad=$broad,reads_folder=${reads_folder},filter=$filter,control=${control} \
 --account $account \
 $script_to_sbatch
+
+# ,conda_enviro=${conda_enviro}
 
