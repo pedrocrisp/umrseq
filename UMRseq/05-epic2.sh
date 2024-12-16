@@ -83,6 +83,6 @@ plotEnrichment \
 --blackListFileName $blacklist \
 -p 2 \
 -o ${bam_dir}_epic2_FRIP/${ID}_FRIP.pdf \
--outRawCounts 
+--outRawCounts ${bam_dir}_epic2_FRIP/${ID}_FRIP_counts.tab
 
 echo finished summarising
