@@ -7,7 +7,7 @@ bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_di
 "
 
 #define stepo in the pipeline - should be the same name as the script
-step=05-epic2
+step=10-FRIP_custom_region
 
 ######### Setup ################
 sample_list=$1
