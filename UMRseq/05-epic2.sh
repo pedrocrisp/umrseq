@@ -21,11 +21,12 @@ echo working dir is now $PWD
 
 ########## Modules #################
 # dependencies
-# conda env with epic2
+# conda env with epic2 and deeptools
 # code developed using epic2 v0.0.41 - this versin does not support PE but PE option in newer version 0.0.52 gives weird results and 10x lower data coverage???
 # use v 0.041 and NOT PE mode
 # conda create --name epic2 python=3.8
 # conda install -c bioconda epic2=0.0.41
+# conda install -c bioconda deeptools=3.5.0
 
 conda activate $conda_enviro
 
@@ -70,5 +71,18 @@ rm ${bam_dir}_epic2/${ID}.${bin_Size}.epic2
 # 1       16950   17449   116     1188.359456539154       .
 # 1       22000   25449   277     474.23892998695374      .
 # 1       43600   44849   99      146.5398440361023       .
+
+####### FRIP module #######
+# calculate FRIP using deeptools
+
+mkdir -p ${bam_dir}_epic2_FRIP
+
+plotEnrichment \
+-b $bam_dir/${ID}_sorted.bam \
+--BED ${bam_dir}_epic2/${ID}.${bin_Size}.epic2.bed \
+--blackListFileName $blacklist \
+-p 2 \
+-o ${bam_dir}_epic2_FRIP/${ID}_FRIP.pdf \
+-outRawCounts 
 
 echo finished summarising
