@@ -17,7 +17,7 @@ bam_dir=$4
 conda_enviro=$5
 chrom_sizes_file=$6
 bin_Size=$7
-$blacklist=$8
+blacklist=$8
 #RPGC=$6
 account_department=$9
 
