@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <conda_enviro> <chrom_sizes_file> <bin_Size> <account_department>
+bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <conda_enviro> <chrom_sizes_file> <bin_Size> <blacklist> <account_department>
 "
 
 #define stepo in the pipeline - should be the same name as the script
@@ -17,10 +17,11 @@ bam_dir=$4
 conda_enviro=$5
 chrom_sizes_file=$6
 bin_Size=$7
+$blacklist=$8
 #RPGC=$6
-account_department=$8
+account_department=$9
 
-if [ "$#" -lt "8" ]
+if [ "$#" -lt "9" ]
 then
 echo $usage
 exit -1
@@ -81,7 +82,7 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},bam_dir=${bam_dir},conda_enviro=${conda_enviro},chrom_sizes_file=${chrom_sizes_file},bin_Size=${bin_Size} \
+--export LIST=${sample_list},bam_dir=${bam_dir},conda_enviro=${conda_enviro},chrom_sizes_file=${chrom_sizes_file},bin_Size=${bin_Size},blacklist=${blacklist} \
 --account $account_department \
 $script_to_sbatch
 
