@@ -36,7 +36,7 @@ echo sample being mapped is $ID
 
 #make adaligned folder bsmaped
 cd analysis
-mkdir -p ${bam_dir}_FRIP_${regions_name}
+mkdir -p ${bam_dir}_FRIP_${region_name}
 
 ####### FRIP module #######
 # calculate FRIP using deeptools
@@ -48,7 +48,7 @@ plotEnrichment \
 --BED ${region_file} \
 --blackListFileName $blacklist \
 -p 2 \
--o ${bam_dir}_FRIP_${regions_name}/${ID}_FRIP.pdf \
---outRawCounts ${bam_dir}_FRIP_${regions_name}/${ID}_FRIP_counts.tab
+-o ${bam_dir}_FRIP_${region_name}/${ID}_FRIP.pdf \
+--outRawCounts ${bam_dir}_FRIP_${region_name}/${ID}_FRIP_counts.tab
 
 echo finished summarising
