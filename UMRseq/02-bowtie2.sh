@@ -143,8 +143,12 @@ samtools view -q $q10filter -b -@ $bt2_threads $outsam | samtools sort -m 8G -@ 
 #Delete the temporary sam.
 rm -v ${outsam}
 
-#Make an index of the sorted bam file
+#Make a csi index of the sorted bam file
 samtools index -c -@ $bt2_threads ${outbam}
+
+# NOTE csaw only works with .bai index so if you want to run DE UMR analysis, you will need to use .bai and/or a split genome (balrey, wheat, onion etc)
+#Make a bai index of the sorted bam file
+samtools index -b -@ $bt2_threads ${outbam}
 
 # count total reads after filtering
 echo "${ID} total alignments after MAPQ filter (should only include reads that map to one location)"
