@@ -16,9 +16,10 @@ bt2_genome=$4
 q10filter=$5
 walltime=$6
 mem=$7
-account_department=$8
+genome_index=$8
+account_department=$9
 
-if [ "$#" -lt "8" ]
+if [ "$#" -lt "9" ]
 then
 echo $usage
 exit -1
@@ -77,6 +78,6 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},reads_folder=$reads_folder,bt2_threads=$bt2_threads,bt2_genome=$bt2_genome,q10filter=$q10filter \
+--export LIST=${sample_list},reads_folder=$reads_folder,bt2_threads=$bt2_threads,bt2_genome=$bt2_genome,q10filter=$q10filter,genome_index=$genome_index \
 --account $account_department \
 $script_to_sbatch
