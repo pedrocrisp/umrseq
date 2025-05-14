@@ -428,6 +428,8 @@ head(tabbest)
 # 6 0.909343338491651                 1
 
 # In the above table, each row contains the statistics for each cluster. Of interest are the best and logFC fields. The former is the index of the window that is the most significant in each cluster, while the latter is the log-fold change of that window. This can be used to obtain a summary of the direction of DB across all clusters/regions.
+# note - Judy uses
+# is.sig.pos <- (tabbest$logFC > 0)[is.sig]
 
 is.sig.pos <- (tabbest$rep.logFC > 0)[is.sig]
 summary(is.sig.pos)
