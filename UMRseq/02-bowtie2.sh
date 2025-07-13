@@ -170,3 +170,5 @@ uniq -c > ${outdir_stats}/${ID}_MAPQ_distribution.txt
 # flagstat summary
 samtools flagstat ${outbam} \
  > ${outdir_stats}/${ID}_flagstat.txt
+
+ echo Done mapping
