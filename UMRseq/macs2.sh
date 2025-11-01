@@ -101,7 +101,7 @@ then
 macs2_cmd="$macs2_cmd --broad"
 fi
 
-if [ -n "$control" ]
+if [ -n "$control_input" ]
 then
 macs2_cmd="$macs2_cmd $control_input"
 fi
