@@ -76,12 +76,12 @@ fi
 # --nomodel Disables MACS2's fragment size modeling
 # UMR-seq has diverse fragment sizes, we don't want MACS2 to model a single fragment size
 # --keep-dup all
+# --bdg --SPMR \
 
 macs2_cmd="macs2 callpeak \
 $input \
 -g $genome_size \
 -n ${ID} \
---bdg --SPMR \
 --nomodel \
 --keep-dup all \
 --outdir macs2"
