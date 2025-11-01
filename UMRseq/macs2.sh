@@ -61,10 +61,19 @@ input="-t ${reads_folder}/${ID}_sorted.bam"
 control_input="-c ${reads_folder}/${control}_sorted.bam"
 fi
 
+# 1/11/25 Pete added additional options
+# -B --SPMR output CPM normalised bedfiles
+# --nomodel Disables MACS2's fragment size modeling
+# UMR-seq has diverse fragment sizes, we don't want MACS2 to model a single fragment size
+# --keep-dup all
+
 macs2_cmd="macs2 callpeak \
 $input \
 -g $genome_size \
--n ${ID}_test \
+-n ${ID} \
+--bdg --SPMR \
+--nomodel \
+--keep-dup all \
 --outdir macs2"
 
 
