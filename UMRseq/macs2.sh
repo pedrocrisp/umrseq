@@ -63,7 +63,7 @@ fi
 # currently, script wont work if deduplication was undertaken and a control is used too
 if [ "$control" == "no" ]
 then
-control=""
+control_input=""
 echo "User specified to not use a control sample"
 else
 control_input="-c ${reads_folder}/${control}_sorted.bam"
