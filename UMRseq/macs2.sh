@@ -52,14 +52,23 @@ fi
 if [ "$filter" == "yes" ]
 then
 input="-t ${reads_folder}_filtered/${ID}_sorted_NoDup_ProPairs.bam"
-control_input="-c ${reads_folder}_filtered/${control}_sorted_NoDup_ProPairs.bam"
 fi
 
 if [ "$filter" == "no" ]
 then
 input="-t ${reads_folder}/${ID}_sorted.bam"
+fi
+
+# control is optional
+# currently, script wont work if deduplication was undertaken and a control is used too
+if [ "$control" == "no" ]
+then
+echo "User specified to not use a control sample"
+else
 control_input="-c ${reads_folder}/${control}_sorted.bam"
 fi
+
+
 
 # 1/11/25 Pete added additional options
 # -B --SPMR output CPM normalised bedfiles
