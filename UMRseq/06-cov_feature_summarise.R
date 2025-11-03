@@ -52,7 +52,9 @@ label_size = 25.4/72 * 8
 
 #########  3. Merge in C sites data ##########
 
-matrix_test <- read_tsv(paste0(out_dir, "/",sample_ID, ".mat_values.tab"), skip = 3, col_names = as.character(c(1:430)))
+matrix_test <- read_tsv(paste0(out_dir, "/",sample_ID, ".mat_values.tab"), skip = 3)
+# Rename columns to character numbers
+names(matrix_test) <- as.character(seq_len(ncol(matrix_test)))
 
 # replace NaN with 0
 matrix_test_zero <- matrix_test %>%
