@@ -81,7 +81,6 @@ macs2_cmd="macs2 callpeak \
 $input \
 -g $genome_size \
 -n ${ID} \
---nomodel \
 --keep-dup all \
 --outdir macs2"
 
