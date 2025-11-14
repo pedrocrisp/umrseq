@@ -44,7 +44,8 @@ genome_size=hs
 paired_end=yes
 broad=no
 filter=no
-account=a_crisp
+model=yes
+account=a_agfs_ps
 
 while getopts ":i:r:o:A:m:c:t:s:p:C:D:Bfh" option; do
    case $option in
@@ -58,6 +59,7 @@ while getopts ":i:r:o:A:m:c:t:s:p:C:D:Bfh" option; do
       s) genome_size=${OPTARG};;
       p) paired_end=${OPTARG};;
       C) control=${OPTARG};;
+      D) model=${OPTARG};;
       B) broad=yes;;
       f) filter=yes;;
       h) # display Help
@@ -154,7 +156,7 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},paired_end=$paired_end,genome_size=$genome_size,broad=$broad,reads_folder=${reads_folder},filter=$filter,control=${control} \
+--export LIST=${sample_list},paired_end=$paired_end,genome_size=$genome_size,broad=$broad,reads_folder=${reads_folder},filter=$filter,control=${control},model=${model} \
 --account $account \
 $script_to_sbatch
 

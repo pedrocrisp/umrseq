@@ -70,13 +70,12 @@ control_input="-c ${reads_folder}/${control}*sorted.bam"
 fi
 
 
-
 # 1/11/25 Pete added additional options
 # -B --SPMR output CPM normalised bedfiles
-# --nomodel Disables MACS2's fragment size modeling
-# UMR-seq has diverse fragment sizes, we don't want MACS2 to model a single fragment size
+# These can be quite big
+
 # --keep-dup all
-# --bdg --SPMR \
+# --bdg --SPMR
 
 macs2_cmd="macs2 callpeak \
 $input \
@@ -102,6 +101,16 @@ then
 macs2_cmd="$macs2_cmd --broad"
 fi
 
+# --nomodel Disables MACS2's fragment size modeling
+# UMR-seq has diverse fragment sizes, we don't want MACS2 to model a single fragment size
+# recomended option is nomodel, but default in script is yes, model to keep consistent with old version of the script
+if [ "$model" == "nomodel" ]
+then
+macs2_cmd="$macs2_cmd --nomodel"
+fi
+
+# option earlier in the script returs $control_input as an empty variable is script was called with "-C no"
+# if a control file was specified then the contro is added to the MACS2 call here
 if [ -n "$control_input" ]
 then
 macs2_cmd="$macs2_cmd $control_input"
