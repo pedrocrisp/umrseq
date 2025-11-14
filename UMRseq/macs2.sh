@@ -103,6 +103,8 @@ fi
 # --nomodel Disables MACS2's fragment size modeling
 # UMR-seq has diverse fragment sizes, we don't want MACS2 to model a single fragment size
 # recomended option is nomodel, but default in script is yes, model to keep consistent with old version of the script
+# but also note that if running in PE mode with -f BAMPE this override (disables) the model anyway 
+# so running -f BAMPE with model or nomodel gives identical output in my testing
 if [ "$model" == "nomodel" ]
 then
 macs2_cmd="$macs2_cmd --nomodel"
