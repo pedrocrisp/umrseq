@@ -180,6 +180,8 @@ $bam_dir/${ID}_sorted.bam
 ########## Modules #################
 module load java/11.0.18
 # picard needs R
+
+#  *** R needs to be updated to 2023a in 2026 ***
 module load r/4.2.1-foss-2022a
 
 java -jar ~/software/picard.jar CollectInsertSizeMetrics \

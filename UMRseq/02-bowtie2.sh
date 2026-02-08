@@ -20,10 +20,10 @@ cd "$SLURM_SUBMIT_DIR"
 echo working dir is now $PWD
 
 ########## Modules #################
-# bowtie2 needs updatign to gcc-12 or 13 in 2026
+# *** bowtie2 needs updatign to gcc-12 or 13 in 2026 ***
 module load bowtie2/2.4.5-gcc-11.3.0
 
-# updating samtools to gcc-11.3 (but v11 also being phased out in 2026 - test samtools/1.18-gcc-12.3.0)
+# *** updating samtools to gcc-11.3 (but v11 also being phased out in 2026 - test samtools/1.18-gcc-12.3.0) ***
 # module load samtools/1.13-gcc-10.3.0
 module load samtools/1.13-gcc-11.3.0
 # samtools/1.18-gcc-12.3.0
