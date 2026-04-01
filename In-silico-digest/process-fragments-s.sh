@@ -19,7 +19,7 @@ echo working dir is now $PWD
 
 # Load modules
 module load bedtools
-module load r/4.2.1-foss-2022a
+module load r/4.4.2-gfbf-2024a
 module load seqtk/1.3-gcc-11.3.0
 
 cd analysis
