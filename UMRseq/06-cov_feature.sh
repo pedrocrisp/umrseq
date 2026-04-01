@@ -80,9 +80,8 @@ plotHeatmap \
 -m ${out_dir}/${ID}.mat.gz \
 -out ${out_dir}/${ID}.mat_heatmap.png
 
-# Run R module to creat 100bp tile bed file
-#  *** R needs to be updated to 2023a in 2026 ***
-module load r/4.2.1-foss-2022a
+# Run R module to create 100bp tile bed file
+module load r/4.4.2-gfbf-2024a
 
 R -f ~/gitrepos/umrseq/UMRseq/06-cov_feature_summarise.R \
 --args $ID $out_dir
