@@ -67,6 +67,7 @@ plotHeatmap \
 -out ${out_dir}/${ID}.mat_heatmap.png \
 --zMin $y_min \
 --zMax $y_max \
+--colorMap $colours \
 --missingDataColor 1 \
 --verbose
 

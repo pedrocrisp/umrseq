@@ -18,10 +18,11 @@ mat_dir=$4
 out_dir=$5
 y_min=$6
 y_max=$7
-conda_enviro=$8
-account_department=$9
+colours=$8
+conda_enviro=$9
+account_department=${10}
 
-if [ "$#" -lt "9" ]
+if [ "$#" -lt "10" ]
 then
 echo $usage
 exit -1
@@ -82,6 +83,6 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},out_dir=${out_dir},mat_dir=${mat_dir},y_min=${y_min},y_max=${y_max},conda_enviro=${conda_enviro} \
+--export LIST=${sample_list},out_dir=${out_dir},mat_dir=${mat_dir},y_min=${y_min},y_max=${y_max},colours=${colours},conda_enviro=${conda_enviro} \
 --account $account_department \
 $script_to_sbatch
