@@ -71,7 +71,7 @@ plotHeatmap \
 --zMax $y_max \
 --colorMap $colours \
 --missingDataColor 1 \
---legendLocation none \
+--legendLocation \
 --verbose
 
 echo finished summarising
