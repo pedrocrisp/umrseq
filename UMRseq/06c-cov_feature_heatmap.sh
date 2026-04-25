@@ -59,7 +59,7 @@ plotProfile \
 --numPlotsPerRow 1 \
 --yMin $y_min \
 --yMax $y_max \
---legendLocation \
+--legendLocation none \
 --verbose
 
 # heatmap
