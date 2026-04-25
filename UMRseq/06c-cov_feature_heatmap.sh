@@ -59,9 +59,11 @@ plotProfile \
 --numPlotsPerRow 1 \
 --yMin $y_min \
 --yMax $y_max \
+--legendLocation none \
 --verbose
 
 # heatmap
+# default colour is RdYlBu
 plotHeatmap \
 -m ${mat_dir}/${ID}.mat.gz \
 -out ${out_dir}/${ID}.mat_heatmap.png \
@@ -69,6 +71,7 @@ plotHeatmap \
 --zMax $y_max \
 --colorMap $colours \
 --missingDataColor 1 \
+--legendLocation none \
 --verbose
 
 echo finished summarising
