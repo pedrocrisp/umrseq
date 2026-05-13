@@ -293,16 +293,16 @@ summary(fit$df.prior)
   # 13.18   13.33   13.33   13.31   13.33   13.33 
 
 # why are these numbers all 13.33??????
-
-png(file = paste0(outFolder, "/Effect-of-EB-shrinkage-on-the-raw-QL-dispersion-estimate-for-each-window.png"))
-plotQLDisp(fit)
-dev.off()
+# i think this is causing me an issue - fix later...
+# png(file = paste0(outFolder, "/Effect-of-EB-shrinkage-on-the-raw-QL-dispersion-estimate-for-each-window.png"))
+# plotQLDisp(fit)
+# dev.off()
 
 # Examining the data with MDS plots. Multi-dimensional scaling (MDS) plots can be used to examine the similarities between libraries. The distance between a pair of libraries on this plot represents the overall log-fold change between those libraries. Ideally, replicates should cluster together while samples from different conditions should be separate. In Figure 7, strong separation in the first dimension is observed between libraries from different cell types. This indicates that significant differences are likely to be present between cell types in this data set.
-
-pdf(file = paste0(outFolder, "/mds.pdf"))
-plotMDS(norm.adjc, labels=celltype, col=c("red", "blue")[as.integer(celltype)])
-dev.off()
+# i think this is causing me an issue - fix later...
+# pdf(file = paste0(outFolder, "/mds.pdf"))
+# plotMDS(norm.adjc, labels=celltype, col=c("red", "blue")[as.integer(celltype)])
+# dev.off()
 
 ################
 ## Testing for differenital UMRs ("DB") and controlling the FDR
