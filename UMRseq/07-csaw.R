@@ -235,10 +235,11 @@ logfc <- adjc[,1] - adjc[,4]
 head(logfc)
 
 # Abundance-dependent trend in the log-fold change between two H3K9ac libraries (mature B over pro-B),  across all windows retained after filtering.
-pdf(file = paste0(outFolder, "/Abundance-dependent-trend-bias.pdf"))
-smoothScatter(win.ab, logfc, ylim=c(-6, 6), xlim=c(0, 5),
-xlab="Average abundance", ylab="Log-fold change")
-dev.off()
+# i think this is causing me an issue - fix later...
+# pdf(file = paste0(outFolder, "/Abundance-dependent-trend-bias.pdf"))
+# smoothScatter(win.ab, logfc, ylim=c(-6, 6), xlim=c(0, 5),
+# xlab="Average abundance", ylab="Log-fold change")
+# dev.off()
 
 # determine offsets for normalisation
 # offsets <- normOffsets(filtered.data, type="loess", se.out=FALSE) 
