@@ -74,6 +74,7 @@ window_spacing
 # 
 # BiocManager::install("csaw")
 # BiocManager::install("rtracklayer")
+# install.packages("KernSmooth")
 
 library(tidyverse)
 library(csaw)
@@ -235,11 +236,10 @@ logfc <- adjc[,1] - adjc[,4]
 head(logfc)
 
 # Abundance-dependent trend in the log-fold change between two H3K9ac libraries (mature B over pro-B),  across all windows retained after filtering.
-# i think this is causing me an issue - fix later...
-# pdf(file = paste0(outFolder, "/Abundance-dependent-trend-bias.pdf"))
-# smoothScatter(win.ab, logfc, ylim=c(-6, 6), xlim=c(0, 5),
-# xlab="Average abundance", ylab="Log-fold change")
-# dev.off()
+pdf(file = paste0(outFolder, "/Abundance-dependent-trend-bias.pdf"))
+smoothScatter(win.ab, logfc, ylim=c(-6, 6), xlim=c(0, 5),
+xlab="Average abundance", ylab="Log-fold change")
+dev.off()
 
 # determine offsets for normalisation
 # offsets <- normOffsets(filtered.data, type="loess", se.out=FALSE) 
@@ -250,10 +250,9 @@ head(offsets)
 norm.adjc <- adjc - offsets/log(2)
 norm.fc <- norm.adjc[,1]-norm.adjc[,4]
 
-# i think this is causing me an issue - fix later...
-# pdf(file = paste0(outFolder, "/non-linear-normalization-trended-bias.pdf"))
-# smoothScatter(win.ab, norm.fc, ylim=c(-6, 6), xlim=c(0, 5), xlab="Average abundance", ylab="Log-fold change")
-# dev.off()
+pdf(file = paste0(outFolder, "/non-linear-normalization-trended-bias.pdf"))
+smoothScatter(win.ab, norm.fc, ylim=c(-6, 6), xlim=c(0, 5), xlab="Average abundance", ylab="Log-fold change")
+dev.off()
 
 # The implicit assumption of non-linear methods is that most windows at each abundance are not DB. Any systematic difference between libraries is attributed to bias and is removed. The assumption of a non-DB majority is reasonable for this data set, given that the cell types being compared are quite closely related. However, it is not appropriate in situ- ations where large-scale DB is expected, as removal of the difference would result in loss of genuine DB. An alternative normalization strategy for these situations will be described later in the CBP analysis.
 
@@ -280,10 +279,9 @@ summary(y$trended.dispersion)
 
 #For most data sets, one would expect to see a trend that decreases to a plateau with increasing average abundance. This reflects the greater reliability of large counts, where the effects of stochasticity and technical artifacts (e.g., mapping errors, PCR duplicates) are averaged out. In Figure 5, the range of abundances after filtering is such that the plateau has already been reached. This is still a satisfactory result, as it indicates that the retained windows have low variability and more power to detect DB.
 
-# i think this is causing me an issue - fix later...
-# png(file = paste0(outFolder, "/Abundance-dependent-trend-in-the-BCV-for-each-window.png"))
-# plotBCV(y)
-# dev.off()
+png(file = paste0(outFolder, "/Abundance-dependent-trend-in-the-BCV-for-each-window.png"))
+plotBCV(y)
+dev.off()
 
 # Estimating the QL dispersion.
 # Additional modelling is provided with the QL methods in edgeR (Lund et al., 2012). This introduces a QL dispersion parameter for each window, which captures variability in the NB dispersion around the fitted trend for each window. Thus, the QL dispersion can model window-specific variability, whereas the NB dis- persion trend is averaged across many windows. However, with limited replicates, there is not enough information for each window to stably estimate the QL dispersion. This is overcome by sharing information between windows with empirical Bayes (EB) shrinkage. The instability of the QL dispersion estimates is reduced by squeezing the estimates towards an abundance-dependent trend (Figure 6).
@@ -294,16 +292,14 @@ summary(fit$df.prior)
   # 13.18   13.33   13.33   13.31   13.33   13.33 
 
 # why are these numbers all 13.33??????
-# i think this is causing me an issue - fix later...
-# png(file = paste0(outFolder, "/Effect-of-EB-shrinkage-on-the-raw-QL-dispersion-estimate-for-each-window.png"))
-# plotQLDisp(fit)
-# dev.off()
+png(file = paste0(outFolder, "/Effect-of-EB-shrinkage-on-the-raw-QL-dispersion-estimate-for-each-window.png"))
+plotQLDisp(fit)
+dev.off()
 
 # Examining the data with MDS plots. Multi-dimensional scaling (MDS) plots can be used to examine the similarities between libraries. The distance between a pair of libraries on this plot represents the overall log-fold change between those libraries. Ideally, replicates should cluster together while samples from different conditions should be separate. In Figure 7, strong separation in the first dimension is observed between libraries from different cell types. This indicates that significant differences are likely to be present between cell types in this data set.
-# i think this is causing me an issue - fix later...
-# pdf(file = paste0(outFolder, "/mds.pdf"))
-# plotMDS(norm.adjc, labels=celltype, col=c("red", "blue")[as.integer(celltype)])
-# dev.off()
+pdf(file = paste0(outFolder, "/mds.pdf"))
+plotMDS(norm.adjc, labels=celltype, col=c("red", "blue")[as.integer(celltype)])
+dev.off()
 
 ################
 ## Testing for differenital UMRs ("DB") and controlling the FDR
