@@ -280,9 +280,10 @@ summary(y$trended.dispersion)
 
 #For most data sets, one would expect to see a trend that decreases to a plateau with increasing average abundance. This reflects the greater reliability of large counts, where the effects of stochasticity and technical artifacts (e.g., mapping errors, PCR duplicates) are averaged out. In Figure 5, the range of abundances after filtering is such that the plateau has already been reached. This is still a satisfactory result, as it indicates that the retained windows have low variability and more power to detect DB.
 
-png(file = paste0(outFolder, "/Abundance-dependent-trend-in-the-BCV-for-each-window.png"))
-plotBCV(y)
-dev.off()
+# i think this is causing me an issue - fix later...
+# png(file = paste0(outFolder, "/Abundance-dependent-trend-in-the-BCV-for-each-window.png"))
+# plotBCV(y)
+# dev.off()
 
 # Estimating the QL dispersion.
 # Additional modelling is provided with the QL methods in edgeR (Lund et al., 2012). This introduces a QL dispersion parameter for each window, which captures variability in the NB dispersion around the fitted trend for each window. Thus, the QL dispersion can model window-specific variability, whereas the NB dis- persion trend is averaged across many windows. However, with limited replicates, there is not enough information for each window to stably estimate the QL dispersion. This is overcome by sharing information between windows with empirical Bayes (EB) shrinkage. The instability of the QL dispersion estimates is reduced by squeezing the estimates towards an abundance-dependent trend (Figure 6).
