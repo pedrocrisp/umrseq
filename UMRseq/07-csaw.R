@@ -324,7 +324,12 @@ head(res$table)
 # 5 0.3156714 -0.9548798 0.09678204 0.7599154
 # 6 0.3707627 -0.8507514 0.14431459 0.7092391
 
-is.sig.bins <- res$table$FDR <= 0.05
+# check how many bins significant at p < 0.05 (expect many and 5% by chance - see what answer is...)
+is.sig.bins <- res$table$PValue <= 0.05
+summary(is.sig.bins)
+
+# and FDR corrected bins (just out of interest - correct at region level below
+is.sig.bins <- p.adjust(res$table$PValue, method = "BH") <= 0.05
 summary(is.sig.bins)
 
 # region level FDR correction
