@@ -86,7 +86,7 @@ sbatch --array $sbatch_t \
 -t ${walltime} \
 -N 1 \
 -n 1 \
---cpus-per-task 1 \
+--cpus-per-task 2 \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
