@@ -249,9 +249,10 @@ head(offsets)
 norm.adjc <- adjc - offsets/log(2)
 norm.fc <- norm.adjc[,1]-norm.adjc[,4]
 
-pdf(file = paste0(outFolder, "/non-linear-normalization-trended-bias.pdf"))
-smoothScatter(win.ab, norm.fc, ylim=c(-6, 6), xlim=c(0, 5), xlab="Average abundance", ylab="Log-fold change")
-dev.off()
+# i think this is causing me an issue - fix later...
+# pdf(file = paste0(outFolder, "/non-linear-normalization-trended-bias.pdf"))
+# smoothScatter(win.ab, norm.fc, ylim=c(-6, 6), xlim=c(0, 5), xlab="Average abundance", ylab="Log-fold change")
+# dev.off()
 
 # The implicit assumption of non-linear methods is that most windows at each abundance are not DB. Any systematic difference between libraries is attributed to bias and is removed. The assumption of a non-DB majority is reasonable for this data set, given that the cell types being compared are quite closely related. However, it is not appropriate in situ- ations where large-scale DB is expected, as removal of the difference would result in loss of genuine DB. An alternative normalization strategy for these situations will be described later in the CBP analysis.
 
