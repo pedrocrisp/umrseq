@@ -20,10 +20,9 @@ cd "$SLURM_SUBMIT_DIR"
 echo working dir is now $PWD
 
 ######### Modules #################
-#  *** R needs to be updated to 2023a in 2026 ***
-module load r/4.2.1-foss-2022a
+module load r/4.4.2-gfbf-2024a
 
-# *** bedtools needs updatign to gcc-12 or 13 in 2026 ***
+# *** bedtools needs updatign to gcc-12 or 13 in 2026, but module not yet available ***
 module load bedtools/2.30.0-gcc-11.3.0
 # module load bedtools/2.30.0-gcc-10.3.0
 ########## Set up dirs #################
