@@ -22,7 +22,10 @@ set -xeuo pipefail
 #
 # 19 October 2021
 # Rewrote script to find the fragments. Wrote a script to remove fragments that had at least 50% or 80% Ns.
-
+#
+#18 Jun 2026 - Yoshi
+#Changed -c option from nodes to cpus.
+#
 ################### Help function ###################
 Help()
 {
@@ -43,7 +46,7 @@ echo
 
 ############### Options with defaults ###############
 mem=20
-nodes=1
+cpus=1
 walltime=2:00:00
 
 while getopts ":g:o:f:M:s:G:A:m:c:t:h" option; do
@@ -55,7 +58,7 @@ while getopts ":g:o:f:M:s:G:A:m:c:t:h" option; do
       G) gitdir=${OPTARG};;
       A) account=${OPTARG};;
       m) mem=${OPTARG};;
-      c) nodes=${OPTARG};;
+      c) cpus=${OPTARG};;
       t) walltime=${OPTARG};;
       h) # display Help
          Help
@@ -135,7 +138,7 @@ cat $post_script_sbatch > ${log_folder}/script2.log
 sbatch --array $sbatch_t \
 -t ${walltime} \
 -N 1 \
--n ${nodes} \
+-c ${cpus} \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
