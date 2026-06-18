@@ -24,7 +24,12 @@ set -xeuo pipefail
 # Rewrote script to find the fragments. Wrote a script to remove fragments that had at least 50% or 80% Ns.
 #
 #18 Jun 2026 - Yoshi
-#Changed -c option from nodes to cpus.
+#Changed -c option from nodes to cpus. By default seqtk (in process-motifs.sh) uses 4 threads. 
+#Changed process-motifs.sh invocation to be an sbatch submission, since previously it was ran in the 
+#login node. Now it is submitted and the following job is dependent on the first job completion.
+#Then changed the last sbatch submission to run with 1 core per array,since seqhax cannot perform 
+#multithreaded operations.
+#Added a genome compression check, since I usually have it stored compressed.
 #
 ################### Help function ###################
 Help()
@@ -39,7 +44,9 @@ echo "The motifs.fa file contains all recognition sites of the enzymes that you 
 echo
 echo "The filter is the minimum length of the fragment that is accepted by the filter."
 echo
-echo "Default memory usage is 20GB, default CPU usage is 1 CPU and default walltime is 2 hours."
+echo "Input genome must be an uncompressed FASTA file"
+echo
+echo "Default memory usage is 20GB, default CPU usage is 1 CPU (no multi-threading) and default walltime is 2 hours."
 echo
 
 }
@@ -75,7 +82,6 @@ done
 
 ###################### Modules ######################
 #requires seqkit
-module load seqtk
 
 # find script to run, makes it file system agnostic #
 
@@ -88,24 +94,67 @@ else
 scriptdir="$(dirname $(readlink -f $0))"
 fi
 
-step=in-silico-digest-s
+# require genome variable to be set first
+if [[ -z "${genome:-}" ]]; then
+  echo "ERROR: genome file not specified. Use -g <genome.fa>" >&2
+  exit 1
+fi
 
+case "$genome" in
+  *.gz|*.bz2|*.xz|*.zip|*.Z)
+    echo "ERROR: genome file appears to be compressed ('$genome'). Please decompress it before running this script." >&2
+    exit 1
+    ;;
+  *)
+    ;;  # nothing to do for uncompressed filenames
+esac
+
+echo "Running the in silico digestion"
 ##### Split genome file by chromosome
-
-bash ${scriptdir}/process-motifs.sh \
+pre_jobid=$(sbatch --parsable -t ${ time} \
+--mem ${mem}gb \
+--cpus-per-task ${cpus} \
+--wrap="bash ${scriptdir}/process-motifs.sh \
 -M $motifs \
 -o $output \
 -s $scriptdir \
--g $genome
+-g $genome") 
+
+if [[ -z "$pre_jobid" ]]; 
+   then echo "ERROR: failed to submit preprocessing job" >&2 exit 1 
+fi 
+echo "Submitted preprocessing job: $pre_jobid"
+
+echo "Waiting for preprocess job $pre_jobid to finish..." 
+while squeue -j "$pre_jobid" >/dev/null 2>&1; 
+   do sleep 5 
+done
+
+if command -v sacct >/dev/null 2>&1; 
+   then state=(sacct−j"{pre_jobid}" \
+   --format=State --noheader | head -n1 | awk '{print $1}') 
+   elif [[ "$state" != "COMPLETED" ]]; 
+   then echo "Preprocessing job $pre_jobid did not complete successfully: $state" >&2 exit 1 
+   else echo "sacct not available; assuming preprocess finished successfully (monitor manually if needed)" fi
+fi
+
+
+#bash ${scriptdir}/process-motifs.sh \
+#-M $motifs \
+#-o $output \
+#-s $scriptdir \
+#-g $genome
 
 #Submit batch job to sbatch
-echo "Running the in silico digestion"
 genome_size=$output/${output}.chrom.sizes
 
 #### Process motifs file
-
+if [[ -z "$number_of_samples" || "$number_of_samples" -lt 1 ]]; 
+   then echo "No samples found in analysis/${output}-tmp/motifs-regex.txt" >&2 exit 1 
+fi
 
 ####
+step=in-silico-digest-s
 
 number_of_samples=`wc -l analysis/${output}-tmp/motifs-regex.txt \
 | awk '{print $1}'`
@@ -135,10 +184,11 @@ cat $0 > ${log_folder}/sbatch_runner.log
 post_script_sbatch=${scriptdir}/process-fragments.sh
 cat $post_script_sbatch > ${log_folder}/script2.log
 
-sbatch --array $sbatch_t \
+sbatch --dependency=afterok:${pre_jobid} \
+--array $sbatch_t \
 -t ${walltime} \
 -N 1 \
---cpus-per-task ${cpus} \
+--cpus-per-task 1 \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
