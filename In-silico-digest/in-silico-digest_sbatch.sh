@@ -138,7 +138,7 @@ cat $post_script_sbatch > ${log_folder}/script2.log
 sbatch --array $sbatch_t \
 -t ${walltime} \
 -N 1 \
--c ${cpus} \
+--cpus-per-task ${cpus} \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
