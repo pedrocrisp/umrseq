@@ -14,6 +14,7 @@ done
 
 mkdir -p analysis/${output}-tmp
 mkdir -p analysis/$output
+module load seqtk
 
 #csplit -s -z \
 #-f analysis/${output}-tmp/Chr \
