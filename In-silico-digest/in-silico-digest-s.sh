@@ -20,7 +20,9 @@ echo working dir is now $PWD
 
 ###### Modules ################
 # Requires seqhax
-module load gcc/12.3.0
+module load gcc/12.3.0 miniconda3/23.9.0-0
+source $EBROOTMINICONDA3/etc/profile.d/conda.sh
+conda activate $env
 
 ###### Set up directories #####
 LINE="$(/bin/sed -n ${SLURM_ARRAY_TASK_ID}p ${LIST})"
@@ -41,3 +43,5 @@ sed -i "s/$/\t"$PATTERN"\t"$STRAND"/" ${output}-tmp/${PATTERN}-digest.txt
 python3 ${scriptdir}/find_cut_sites.py \
 $output-tmp/${PATTERN}-digest.txt \
 $genome_size > ${output}-tmp/${PATTERN}-cuts.txt
+
+conda deactivate
