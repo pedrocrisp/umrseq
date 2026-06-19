@@ -21,7 +21,7 @@ Run in-silico-digest_sbatch.sh:
 Install seqhax:
 module load miniconda3/23.9.0-0
 source $EBROOTMINICONDA3/etc/profile.d/conda.sh
-conda create --name seqhax python=3.8
-conda activate seqhax
-conda install -c bioconda seqhax=0.8.6
+conda create --name digestEnv python=3.8
+conda activate digestEnv
+conda install -c bioconda seqhax=0.8.6 seqkit=2.13.0 
 conda deactivate
