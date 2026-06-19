@@ -57,7 +57,7 @@ cpus=1
 walltime=2:00:00
 env=digestEnv
 
-while getopts ":g:o:f:M:s:G:A:m:c:t:h" option; do
+while getopts ":g:o:f:M:G:A:m:c:t:e:h" option; do
    case $option in
       g) genome=${OPTARG};;
       o) output=${OPTARG};;
