@@ -113,7 +113,7 @@ esac
 
 echo "Running the in silico digestion"
 ##### Split genome file by chromosome
-pre_jobid=$(sbatch --parsable -t ${ time} \
+pre_jobid=$(sbatch --parsable -t 1 \
 --mem 5gb \
 --cpus-per-task 1 \
 --wrap="bash ${scriptdir}/process-motifs.sh \
@@ -130,7 +130,7 @@ echo "Submitted preprocessing job: $pre_jobid"
 
 echo "Waiting for preprocess job $pre_jobid to finish..." 
 while squeue -j "$pre_jobid" >/dev/null 2>&1; 
-   do sleep 5 
+   do sleep 30 
 done
 
 if command -v sacct >/dev/null 2>&1; 
