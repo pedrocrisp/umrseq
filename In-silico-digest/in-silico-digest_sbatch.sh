@@ -133,6 +133,8 @@ while squeue -j "$pre_jobid" >/dev/null 2>&1;
    do sleep 30 
 done
 
+#/home/uqgventu/gitrepos/umrseq/In-silico-digest/in-silico-digest_sbatch.sh: line 138: syntax error near unexpected token `|'
+
 if command -v sacct >/dev/null 2>&1; 
    then state=(sacct−j"{pre_jobid}" \
    --format=State --noheader | head -n1 | awk '{print $1}') 
