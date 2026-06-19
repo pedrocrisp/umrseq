@@ -38,7 +38,7 @@ Help()
 echo "This script submits a batch job to PBS in order to simulate the digestion of your chosen genome."
 echo
 echo "USAGE:"
-echo "bash macs_sbatch.sh -g genome.fa -o output -f filter -M motifs.fa -s software_directory -G github_repository -A department -m memory -c number_of_nodes -t walltime"
+echo "bash macs_sbatch.sh -g genome.fa -o output -f filter -M motifs.fa -s software_directory -G github_repository -A department -m memory -c number_of_nodes -t walltime -e digestEnv"
 echo
 echo "The motifs.fa file contains all recognition sites of the enzymes that you wish to apply, with the enzyme names."
 echo
@@ -55,6 +55,7 @@ echo
 mem=20
 cpus=1
 walltime=2:00:00
+env=digestEnv
 
 while getopts ":g:o:f:M:s:G:A:m:c:t:h" option; do
    case $option in
@@ -67,6 +68,7 @@ while getopts ":g:o:f:M:s:G:A:m:c:t:h" option; do
       m) mem=${OPTARG};;
       c) cpus=${OPTARG};;
       t) walltime=${OPTARG};;
+      e) env=${OPTARG};;
       h) # display Help
          Help
          exit;;
@@ -112,13 +114,14 @@ esac
 echo "Running the in silico digestion"
 ##### Split genome file by chromosome
 pre_jobid=$(sbatch --parsable -t ${ time} \
---mem ${mem}gb \
---cpus-per-task ${cpus} \
+--mem 5gb \
+--cpus-per-task 1 \
 --wrap="bash ${scriptdir}/process-motifs.sh \
 -M $motifs \
 -o $output \
 -s $scriptdir \
--g $genome") 
+-g $genome \
+-e $env") 
 
 if [[ -z "$pre_jobid" ]]; 
    then echo "ERROR: failed to submit preprocessing job" >&2 exit 1 
@@ -196,6 +199,7 @@ sbatch --dependency=afterok:${pre_jobid} \
 --job-name digest-$output \
 --export LIST=analysis/${output}-tmp/motifs-regex.txt,\
 genome_size=${genome_size},\
+env=$env,\
 motifs=$motifs,\
 output=$output,\
 scriptdir=${scriptdir},\
