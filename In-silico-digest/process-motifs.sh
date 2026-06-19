@@ -6,6 +6,7 @@ while getopts ":M:o:s:S:g:h" option; do
       o) output=${OPTARG};;
       s) scriptdir=${OPTARG};;
       g) genome=${OPTARG};;
+      e) env=${OPTARG};;
      \?) # incorrect option
          echo "Error: Invalid option"
          exit;;
@@ -13,9 +14,11 @@ while getopts ":M:o:s:S:g:h" option; do
 done
 
 mkdir -p analysis/${output}-tmp
-mkdir -p analysis/$output
-module load seqtk
+mkdir -p analysis/{$output}
 
+module load miniconda3/23.9.0-0 seqtk
+source $EBROOTMINICONDA3/etc/profile.d/conda.sh
+conda activate $env
 #csplit -s -z \
 #-f analysis/${output}-tmp/Chr \
 #$genome \
@@ -49,3 +52,5 @@ echo -e "seqID\tpatternName\tpattern\tstrand\tstart\tend\tmatched" \
 
 echo -e "Chromosome\tStart\tEnd\tLength" \
 > analysis/$output/fragment-template.txt
+
+conda deactivate
