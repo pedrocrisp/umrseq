@@ -38,7 +38,7 @@ Help()
 echo "This script submits a batch job to PBS in order to simulate the digestion of your chosen genome."
 echo
 echo "USAGE:"
-echo "bash macs_sbatch.sh -g genome.fa -o output -f filter -M motifs.fa -s software_directory -G github_repository -A department -m memory -c number_of_nodes -t walltime -e digestEnv"
+echo "bash macs_sbatch.sh -g genome.fa -o output -f filter -M motifs.fa -s software_directory -G github_repository -A department -m memory -c number_of_cpu -t walltime -e digestEnv"
 echo
 echo "The motifs.fa file contains all recognition sites of the enzymes that you wish to apply, with the enzyme names."
 echo
