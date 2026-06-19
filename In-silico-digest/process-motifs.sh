@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts ":M:o:s:S:g:h" option; do
+while getopts ":M:o:s:S:g:e:h" option; do
    case $option in
       M) motifs=${OPTARG};;
       o) output=${OPTARG};;
