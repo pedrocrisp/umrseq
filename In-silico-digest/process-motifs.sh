@@ -18,7 +18,12 @@ mkdir -p analysis/{$output}
 
 module load miniconda3/23.9.0-0 seqtk
 source $EBROOTMINICONDA3/etc/profile.d/conda.sh
-conda activate $env
+
+if ! conda activate "$env" 2>/dev/null; then
+  echo "Error: Failed to activate conda environment '$env'. Available environments:" >&2
+  conda env list || true
+  exit 1
+fi
 #csplit -s -z \
 #-f analysis/${output}-tmp/Chr \
 #$genome \
