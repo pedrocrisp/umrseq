@@ -51,7 +51,7 @@ grep -v ">" $motifs \
 | sed "s/$/\t+/" \
 > ${TEMP}/motifs.txt
 
-seqkit seq -rp $motifs \
+seqkit seq -t DNA -rp $motifs \
 | grep -v ">" \
 | sed "s/$/\t-/" \
 >> ${TEMP}/motifs.txt
