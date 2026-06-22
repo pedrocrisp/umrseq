@@ -18,6 +18,7 @@ mkdir -p ${output}
 
 TEMP=${output}-tmp
 OUT=${output}
+DIG=$(basename $output)
 
 module load miniconda3/23.9.0-0 seqtk/1.5-gcc-14.2.0
 source $EBROOTMINICONDA3/etc/profile.d/conda.sh
@@ -31,18 +32,18 @@ fi
 #-f analysis/${output}-tmp/Chr \
 #$genome \
 #'/>/' '{*}'
-touch ${TEMP}/$output.fasta.chrom.sizes
-touch ${OUT}/${output}.chrom.sizes
+touch ${TEMP}/${DIG}.fasta.chrom.sizes
+touch ${OUT}/${DIG}.chrom.sizes
 
 seqtk comp $genome | \
 cut -f 1-2 \
-> ${TEMP}/$output.fasta.chrom.sizes
+> ${TEMP}/${DIG}.fasta.chrom.sizes
 # sort
 sort -k1,1 -k2,2n \
-${TEMP}/${output}.fasta.chrom.sizes \
-> ${OUT}/${output}.chrom.sizes
+${TEMP}/${DIG}.fasta.chrom.sizes \
+> ${OUT}/${DIG}.chrom.sizes
 
-rm ${TEMP}/${output}.fasta.chrom.sizes
+rm ${TEMP}/${DIG}.fasta.chrom.sizes
 
 touch ${TEMP}/motifs.txt
 
