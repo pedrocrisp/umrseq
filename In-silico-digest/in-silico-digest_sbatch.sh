@@ -87,9 +87,7 @@ done
 
 # find script to run, makes it file system agnostic #
 
-if
-[[ $OSTYPE == darwin* ]]
-then
+if [[ $OSTYPE == darwin* ]]; then
 readlink=$(which greadlink)
 scriptdir="$(dirname $($readlink -f $0))"
 else
@@ -124,6 +122,7 @@ echo "Running the in silico digestion"
 pre_jobid=$(sbatch --parsable -t 1 \
 --mem 5gb \
 --cpus-per-task 1 \
+--export=ALL \
 --wrap="bash ${scriptdir}/process-motifs.sh \
 -M $motifs \
 -o $output \
@@ -131,8 +130,8 @@ pre_jobid=$(sbatch --parsable -t 1 \
 -g $genome \
 -e $env") 
 
-if [[ -z "$pre_jobid" ]]; 
-   then echo "ERROR: failed to submit preprocessing job" >&2 
+if [[ -z "$pre_jobid" ]]; then 
+   echo "ERROR: failed to submit preprocessing job" >&2 
    exit 1 
 fi 
 echo "Submitted preprocessing job: $pre_jobid"
@@ -142,13 +141,12 @@ while squeue -j "$pre_jobid" >/dev/null 2>&1;
    do sleep 30 
 done
 
-#/home/uqgventu/gitrepos/umrseq/In-silico-digest/in-silico-digest_sbatch.sh: line 138: syntax error near unexpected token `|'
-
-if command -v sacct >/dev/null 2>&1; 
-   then state=(sacct -j "{$pre_jobid}" \
-   --format=State --noheader | head -n 1 | awk '{print $1}') 
-elif [[ "$state" != "COMPLETED" ]]; 
-   then echo "Preprocessing job $pre_jobid did not complete successfully: $state" >&2 exit 1 
+if command -v sacct >/dev/null 2>&1; then 
+   state=$(sacct -j "{$pre_jobid}" --format=State --noheader | head -n 1 | awk '{print $1}') 
+      if [[ "$state" != "COMPLETED" ]]; then
+         echo "Preprocessing job $pre_jobid did not complete successfully: $state" >&2
+         exit 1
+      fi
 else echo "sacct not available; assuming preprocess finished successfully (monitor manually if needed)" fi
 fi
 
@@ -206,7 +204,7 @@ sbatch --dependency=afterok:${pre_jobid} \
 -e ${log_folder}/${step}_e_%A_%a \
 --account ${account} \
 --job-name digest-$output \
---export LIST=analysis/${output}-tmp/motifs-regex.txt,\
+--export=ALL,LIST=analysis/${output}-tmp/motifs-regex.txt,\
 genome_size=${genome_size},\
 env=$env,\
 motifs=$motifs,\
