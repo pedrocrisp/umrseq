@@ -13,10 +13,13 @@ while getopts ":M:o:s:S:g:e:h" option; do
    esac
 done
 
-mkdir -p analysis/${output}-tmp
-mkdir -p analysis/{$output}
+TEMP=$((dirname $genome)/${output}-tmp)
+OUT=$((dirname $genome)/{$output})
 
-module load miniconda3/23.9.0-0 seqtk
+mkdir -p ${TEMP}
+mkdir -p ${OUT}
+
+module load miniconda3/23.9.0-0 seqtk/1.5-gcc-14.2.0
 source $EBROOTMINICONDA3/etc/profile.d/conda.sh
 
 if ! conda activate "$env" 2>/dev/null; then
@@ -31,31 +34,31 @@ fi
 
 seqtk comp $genome | \
 cut -f 1-2 \
-> analysis/${output}-tmp/$output.fasta.chrom.sizes
+> ${TEMP}/$output.fasta.chrom.sizes
 # sort
 sort -k1,1 -k2,2n \
-analysis/${output}-tmp/${output}.fasta.chrom.sizes \
-> analysis/$output/${output}.chrom.sizes
+${TEMP}/${output}.fasta.chrom.sizes \
+> ${OUT}/${output}.chrom.sizes
 
-rm analysis/${output}-tmp/${output}.fasta.chrom.sizes
+rm ${TEMP}/${output}.fasta.chrom.sizes
 
 grep -v ">" $motifs \
 | sed "s/$/\t+/" \
-> analysis/${output}-tmp/motifs.txt
+> ${TEMP}/motifs.txt
 
 seqkit seq -rp $motifs \
 | grep -v ">" \
 | sed "s/$/\t-/" \
->> analysis/${output}-tmp/motifs.txt
+>> ${TEMP}/motifs.txt
 
 python3 ${scriptdir}/convert_bases.py \
-analysis/${output}-tmp/motifs.txt \
-> analysis/${output}-tmp/motifs-regex.txt
+${TEMP}/motifs.txt \
+> ${TEMP}/motifs-regex.txt
 
 echo -e "seqID\tpatternName\tpattern\tstrand\tstart\tend\tmatched" \
-> analysis/$output/digest-template.txt
+> ${OUT}/digest-template.txt
 
 echo -e "Chromosome\tStart\tEnd\tLength" \
-> analysis/$output/fragment-template.txt
+> ${OUT}/fragment-template.txt
 
 conda deactivate
