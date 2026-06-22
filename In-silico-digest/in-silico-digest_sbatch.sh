@@ -103,9 +103,17 @@ if [[ -z "${genome:-}" ]]; then
 fi
 
 case "$genome" in
-  *.gz|*.bz2|*.xz|*.zip|*.Z)
-    echo "ERROR: genome file appears to be compressed ('$genome'). Please decompress it before running this script." >&2
-    exit 1
+    *.gz)
+    echo "Genome file is gzip compressed. Decompressing..."
+    gunzip -k "$genome" || { echo "ERROR: Failed to decompress $genome" >&2; exit 1; }
+    genome="${genome%.gz}"
+    echo "Decompressed to: $genome"
+    ;;
+   *.zip)
+    echo "Genome file is .zip compressed. Decompressing..."
+    unzip -n "$genome" || { echo "ERROR: Failed to decompress $genome" >&2; exit 1; }
+    genome="${genome%.zip}"
+    echo "Decompressed to: $genome"
     ;;
   *)
     ;;  # nothing to do for uncompressed filenames
@@ -124,7 +132,8 @@ pre_jobid=$(sbatch --parsable -t 1 \
 -e $env") 
 
 if [[ -z "$pre_jobid" ]]; 
-   then echo "ERROR: failed to submit preprocessing job" >&2 exit 1 
+   then echo "ERROR: failed to submit preprocessing job" >&2 
+   exit 1 
 fi 
 echo "Submitted preprocessing job: $pre_jobid"
 
@@ -136,11 +145,11 @@ done
 #/home/uqgventu/gitrepos/umrseq/In-silico-digest/in-silico-digest_sbatch.sh: line 138: syntax error near unexpected token `|'
 
 if command -v sacct >/dev/null 2>&1; 
-   then state=(sacct−j"{pre_jobid}" \
-   --format=State --noheader | head -n1 | awk '{print $1}') 
-   elif [[ "$state" != "COMPLETED" ]]; 
+   then state=(sacct -j "{$pre_jobid}" \
+   --format=State --noheader | head -n 1 | awk '{print $1}') 
+elif [[ "$state" != "COMPLETED" ]]; 
    then echo "Preprocessing job $pre_jobid did not complete successfully: $state" >&2 exit 1 
-   else echo "sacct not available; assuming preprocess finished successfully (monitor manually if needed)" fi
+else echo "sacct not available; assuming preprocess finished successfully (monitor manually if needed)" fi
 fi
 
 
@@ -155,7 +164,8 @@ genome_size=$output/${output}.chrom.sizes
 
 #### Process motifs file
 if [[ -z "$number_of_samples" || "$number_of_samples" -lt 1 ]]; 
-   then echo "No samples found in analysis/${output}-tmp/motifs-regex.txt" >&2 exit 1 
+   then echo "No samples found in analysis/${output}-tmp/motifs-regex.txt" >&2 
+   exit 1 
 fi
 
 ####
@@ -166,10 +176,7 @@ number_of_samples=`wc -l analysis/${output}-tmp/motifs-regex.txt \
 
 sbatch_t=1
 if [[ "$number_of_samples" -gt 1 ]]
-then
-
-sbatch_t="1-${number_of_samples}"
-
+   then sbatch_t="1-${number_of_samples}"
 fi
 
 echo "argument to be passed to sbatch -J is '$sbatch_t'"
