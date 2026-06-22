@@ -142,7 +142,7 @@ while squeue -j "$pre_jobid" >/dev/null 2>&1;
 done
 
 if command -v sacct >/dev/null 2>&1; then 
-   state=$(sacct -j "{$pre_jobid}" --format=State --noheader | head -n 1 | awk '{print $1}') 
+   state=$(sacct -j "$pre_jobid" --format=State --noheader | head -n 1 | awk '{print $1}') 
       if [[ "$state" != "COMPLETED" ]]; then
          echo "Preprocessing job $pre_jobid did not complete successfully: $state" >&2
          exit 1
@@ -150,6 +150,12 @@ if command -v sacct >/dev/null 2>&1; then
 else echo "sacct not available; assuming preprocess finished successfully (monitor manually if needed)" fi
 fi
 
+TEMP=${output}-tmp
+OUT=${output}
+DIG=$(basename $output)
+
+#${OUT}/digest-template.txt
+#${OUT}/fragment-template.txt
 
 #bash ${scriptdir}/process-motifs.sh \
 #-M $motifs \
@@ -158,18 +164,18 @@ fi
 #-g $genome
 
 #Submit batch job to sbatch
-genome_size=$output/${output}.chrom.sizes
+genome_size=${OUT}/${DIG}.chrom.sizes
 
 #### Process motifs file
 if [[ -z "$number_of_samples" || "$number_of_samples" -lt 1 ]]; 
-   then echo "No samples found in analysis/${output}-tmp/motifs-regex.txt" >&2 
+   then echo "No samples found in ${TEMP}/motifs-regex.txt" >&2 
    exit 1 
 fi
 
 ####
 step=in-silico-digest-s
 
-number_of_samples=`wc -l analysis/${output}-tmp/motifs-regex.txt \
+number_of_samples=`wc -l ${TEMP}/motifs-regex.txt \
 | awk '{print $1}'`
 
 sbatch_t=1
@@ -204,7 +210,7 @@ sbatch --dependency=afterok:${pre_jobid} \
 -e ${log_folder}/${step}_e_%A_%a \
 --account ${account} \
 --job-name digest-$output \
---export=ALL,LIST=analysis/${output}-tmp/motifs-regex.txt,\
+--export=ALL,LIST=${TEMP}/motifs-regex.txt,\
 genome_size=${genome_size},\
 env=$env,\
 motifs=$motifs,\
