@@ -41,6 +41,7 @@ echo sample being mapped is $ID
 #make adaligned folder bsmaped
 cd analysis
 mkdir -p ${bam_dir}_epic2
+mkdir -p ${bam_dir}_epic2_UMR
 
 ########## Run #################
 # call peaks
@@ -58,12 +59,20 @@ epic2 \
 # remove header to make bed file
 grep -v "^#" ${bam_dir}_epic2/${ID}.${bin_Size}.epic2 > ${bam_dir}_epic2/${ID}.${bin_Size}.epic2.bed
 
+# remove header to make bed file for the consensus UMR pipeline
+UMR_ID=${ID}.1.epic2
+
+cat ${bam_dir}_epic2/${ID}.${bin_Size}.epic2 | grep -v "^#" | \
+cut -f 1-3 | \
+awk -v var=$UMR_ID '{$1=$1; $2=$2; $3=$3; $4=var; print}' | \
+tr ' ' '\t' | sort -k 1,1 -k 2,2n > ${bam_dir}_epic2_UMR/${ID}.UMR.${bin_Size}.epic2.bed
+
 # remove file with header
 rm ${bam_dir}_epic2/${ID}.${bin_Size}.epic2
 
 # outout
 # ChIPCount is the coverage metric
-# score is somethign internal to scicer and doesent mean much unless run with an input background library
+# score is something internal to scicer and doesent mean much unless run with an input background library
 # https://github.com/biocore-ntnu/epic2
 
 # #Chromosome     Start   End     ChIPCount       Score   Strand
