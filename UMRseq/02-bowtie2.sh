@@ -46,11 +46,14 @@ fastqs="$(find $reads_folder -type f -name ${ID}_*.fq*)"
 fastqs_count=($fastqs)
 
 #make adaligned folder bowtie2 (caution this will not fail if dir already exists)
-outdir="${reads_folder}_align_bowtie2"
-mkdir -p ${outdir}
+parent_dir=$(dirname "${reads_folder}")
+reads_name=$(basename "${reads_folder}")
 
-outdir_stats="${reads_folder}_align_bowtie2_stats"
-mkdir -p ${outdir_stats}
+outdir="${parent_dir}/${reads_name}_align_bowtie2"
+mkdir -p "${outdir}"
+
+outdir_stats="${parent_dir}/${reads_name}_align_bowtie2_stats"
+mkdir -p "${outdir_stats}"
 
 
 # output structure
@@ -146,6 +149,9 @@ samtools view -q $q10filter -b -@ $bt2_threads $outsam | samtools sort -m 8G -@ 
 
 #Delete the temporary sam.
 rm -v ${outsam}
+
+#set default genome index:
+
 
 if [ "$genome_index" == "csi" ]
 then
