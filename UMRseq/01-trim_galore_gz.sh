@@ -22,8 +22,12 @@ echo working dir is now $PWD
 ########## Modules #################
 
 module load fastqc/0.11.9-java-11
+module load miniconda3/4.12.0
+
 # cutadapt module causing issues - install v4.4 with conda and use that
 # module load cutadapt/3.4-gcccore-10.3.0
+source $EBROOTMINICONDA3/etc/profile.d/conda.sh
+
 conda activate $conda_enviro
 
 ########## Set up dirs #################
