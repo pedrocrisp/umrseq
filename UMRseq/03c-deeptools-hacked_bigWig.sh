@@ -195,4 +195,5 @@ H=${bam_dir}_insert_metrics/${ID}_insert_size_histogram.pdf \
 CREATE_INDEX=FALSE \
 M=0.5
 
+conda deactivate
 echo finished summarising
