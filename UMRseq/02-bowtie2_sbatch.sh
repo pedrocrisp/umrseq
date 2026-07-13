@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 02-bowtie1_sbatch.sh <sample_list.txt> <reads_folder> <bt2_threads> <bt2_genome.fa> <q10filter> <walltime> <mem> <account_department>"
+bash 02-bowtie1_sbatch.sh <sample_list.txt> <reads_folder> <bt2_threads> <bt2_genome.fa> <q10filter> <walltime> <mem> [genome_index] <account_department>"
 
 #define stepo in the pipeline - should be the same name as the script
 step=02-bowtie2
@@ -16,17 +16,28 @@ bt2_genome=$4
 q10filter=$5
 walltime=$6
 mem=$7
-genome_index=$8
-account_department=$9
+account_department=$8
+genome_index=${9:-bai}
 
-if [ "$#" -lt "9" ]
+if [ "$#" -lt "8" ]
 then
 echo $usage
 exit -1
 else
 echo "initiating bowtie jobs on $reads_folder folder, bowtie can use $bt2_threads threads"
 cat $sample_list
-echo genome reference is $bt2_genome
+echo "genome reference is $bt2_genome"
+fi
+
+if [ "$genome_index" == "bai" ]
+then
+	echo "using default bai alignment indexing"
+elif [ "$genome_index" == "csi" ]
+	then
+	echo "using csi alignment indexing"
+else
+    echo "ERROR: genome_index must be 'bai' or 'csi', got '$genome_index'" >&2
+    exit 1
 fi
 
 #number of samples
