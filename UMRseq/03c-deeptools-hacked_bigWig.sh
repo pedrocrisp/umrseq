@@ -50,6 +50,8 @@ echo working dir is now $PWD
 #                                               writeEnd, value))
 #            continue
 #
+module load miniconda3/23.9.0-0
+source $EBROOTMINICONDA3/etc/profile.d/conda.sh
 
 conda activate $conda_enviro
 
@@ -186,7 +188,7 @@ $bam_dir/${ID}_sorted.bam
 # loading this R module also loads java java/17.0.15
 module load r/4.4.2-gfbf-2024a
 
-java -jar ~/software/picard.jar CollectInsertSizeMetrics \
+java -jar ~/software/picard/build/libs/picard.jar CollectInsertSizeMetrics \
 I=$bam_dir/${ID}_sorted.bam \
 O=${bam_dir}_insert_metrics/${ID}_insert_size_metrics.txt \
 H=${bam_dir}_insert_metrics/${ID}_insert_size_histogram.pdf \
