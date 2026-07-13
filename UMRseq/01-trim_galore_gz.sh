@@ -102,4 +102,5 @@ gzip reads/${ID}_R1_001.fastq
 
 fi
 
+conda deactivate
 echo Done trimming
