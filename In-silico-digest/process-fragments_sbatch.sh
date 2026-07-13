@@ -1,136 +1,87 @@
 #!/bin/bash
-#set -xe
+#SBATCH --requeue
+#SBATCH --partition=general
+
+########## QC #################
 set -xeuo pipefail
 
-############ Change log ###########
-# 26 May 2021 Misha Mangila
-# Original code. Added help option
-#
-# 4 July 2021 Misha Mangila
-# Added section that will run after the sbatch jobs are run
-#
-# 20 July 2021 Misha Mangila
-# Removed section (commented out)
-# Made a few modifications for efficiency
-#
-# 18 August 2021
-# After copying the script, modified script to include seqhax grepbed
-# Added section that collates everything after sbatch and run fragment finder
-#
-# 19 August 2021
-# Removed code that splits file into chromosomes. This happens after sbatch in separate script
-#
-# 19 October 2021
-# Rewrote script to find the fragments. Wrote a script to remove fragments that had at least 50% or 80% Ns.
+echo ------------------------------------------------------
+echo SBATCH: working directory is $SLURM_SUBMIT_DIR
+echo SBATCH: job identifier is $SLURM_JOBID
+echo ------------------------------------------------------
 
-################### Help function ###################
-Help()
-{
+echo working dir is $PWD
 
-echo "This script submits a batch job to PBS in order to simulate the digestion of your chosen genome."
-echo
-echo "USAGE:"
-echo "bash macs_sbatch.sh -g genome.fa -o output -f filter -M motifs.fa -s software_directory -G github_repository -A department -m memory -c number_of_nodes -t walltime"
-echo
-echo "The motifs.fa file contains all recognition sites of the enzymes that you wish to apply, with the enzyme names."
-echo
-echo "The filter is the minimum length of the fragment that is accepted by the filter."
-echo
-echo "Default memory usage is 20GB, default CPU usage is 1 CPU and default walltime is 2 hours."
-echo
+#cd into work dir
+echo changing to SLURM_SUBMIT_DIR
+cd "$SLURM_SUBMIT_DIR"
+echo working dir is now $PWD
 
-}
+# Load modules
+module purge
+module load bedtools/2.31.1-gcc-14.2.0 \
+seqtk/1.5-gcc-14.2.0 \
+r/4.4.2
 
-############### Options with defaults ###############
-mem=20
-nodes=1
-walltime=2:00:00
+#cd analysis
+DIG=$(basename $output)
 
-while getopts ":g:o:f:M:s:G:A:m:c:t:h" option; do
-   case $option in
-      g) genome=${OPTARG};;
-      o) output=${OPTARG};;
-      f) filter=${OPTARG};;
-      M) motifs=${OPTARG};;
-      G) gitdir=${OPTARG};;
-      A) account=${OPTARG};;
-      m) mem=${OPTARG};;
-      c) nodes=${OPTARG};;
-      t) walltime=${OPTARG};;
-      h) # display Help
-         Help
-         exit;;
-     \?) # incorrect option
-         echo "Error: Invalid option"
-         exit;;
-   esac
+#consolidate cut sites across all recognition motifs:
+ls ${output}-tmp/*-cuts.txt > /dev/null 2>&1 || { echo "ERROR: no cuts files found in ${output}-tmp/" >&2; exit 1; }
+cat ${output}-tmp/*-cuts.txt > $output/final-cuts.txt
+
+#rm -rv $output-tmp
+
+echo "Filtering fragments by size"
+#Organise cut sites into fragments and filter frags >100 bp
+python3 ${scriptdir}/find_fragments.py \
+$output/final-cuts.txt \
+$filter ${output}/${DIG}.chrom.sizes \
+${output}/${DIG}
+
+FILTER=${DIG}-fragments-filtered
+echo -e "Location\tLength\tnum_Ns" \
+> ${output}/$FILTER.tsv
+
+sed 1d ${output}/${DIG}-fragments-filtered.txt \
+> ${output}/$FILTER.bed
+
+#retrieve sequence matching each surviving fragment
+bedtools getfasta \
+-fi $genome \
+-bed ${output}/$FILTER.bed \
+-fo ${output}/$FILTER.fa || \
+${softwaredir}/bedtools getfasta \
+-fi $genome \
+-bed ${output}/$FILTER.bed \
+-fo ${output}/$FILTER.fa
+
+echo "Filtering fragments by percentage of N"
+#count of N (undefined) bases in each fragment (-f 9)
+seqtk comp \
+${output}/$FILTER.fa \
+| cut -f 1,2,9 \
+>> ${output}/$FILTER.tsv
+
+#filter to remove fragments with over 50% N
+Rscript ${scriptdir}/in-silico-digest.R \
+${output}/$FILTER.tsv \
+${output}/$FILTER-50%Ns.tsv \
+50
+
+Rscript ${scriptdir}/in-silico-digest.R \
+${output}/$FILTER.tsv \
+${output}/$FILTER-80%Ns.tsv \
+80
+
+echo "Converting output to BED"
+for i in ${output}/*-filtered-*%Ns.tsv
+do
+  BED=`echo $i | sed s/\.tsv/.bed/`
+  TEMP=`echo $i | sed s/\.tsv/_tmp.bed/`
+  sed 1d $i > $TEMP
+  tr ":" "\t" < $TEMP | tr "-" "\t" > $BED
 done
 
-#####################################################
-################### Main function ###################
-#####################################################
-
-###################### Modules ######################
-#requires seqkit
-
-# find script to run, makes it file system agnostic #
-
-if
-[[ $OSTYPE == darwin* ]]
-then
-readlink=$(which greadlink)
-scriptdir="$(dirname $($readlink -f $0))"
-else
-scriptdir="$(dirname $(readlink -f $0))"
-fi
-
-step=process-fragments-s
-
-
-####
-
-number_of_samples=`wc -l analysis/${output}-tmp/motifs-regex.txt \
-| awk '{print $1}'`
-
-sbatch_t=1
-if [[ "$number_of_samples" -gt 1 ]]
-then
-
-sbatch_t="1-${number_of_samples}"
-
-fi
-
-echo "argument to be passed to sbatch -J is '$sbatch_t'"
-
-mkdir -p logs
-
-timestamp=$(date +%Y%m%d-%H%M%S)
-
-#make trimmgalore logs folder, timestamped
-log_folder=logs/${timestamp}_${step}
-mkdir $log_folder
-
-
-post_script_sbatch=${scriptdir}/${step}.sh
-cat $post_script_sbatch > ${log_folder}/script2.log
-
-
-sbatch \
--t ${walltime} \
--N 1 \
--n ${nodes} \
---mem ${mem}gb \
--o ${log_folder}/${step}_o_%A_%a \
--e ${log_folder}/${step}_e_%A_%a \
---account ${account} \
---job-name digest-$output \
---export LIST=analysis/${output}-tmp/motifs-regex.txt,\
-motifs=$motifs,\
-output=$output,\
-scriptdir=${scriptdir},\
-filter=$filter,\
-genome=$( readlink -f $genome ),\
-gitdir=${gitdir} \
-$post_script_sbatch
-
-echo "Job submitted"
+#rm -rv ${output}/*_tmp.bed
+echo "In silico digestion complete"
