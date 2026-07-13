@@ -87,4 +87,5 @@ plotEnrichment \
 -o ${bam_dir}_epic2_FRIP/${ID}_FRIP.pdf \
 --outRawCounts ${bam_dir}_epic2_FRIP/${ID}_FRIP_counts.tab
 
+conda deactivate
 echo finished summarising
