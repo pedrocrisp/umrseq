@@ -43,4 +43,7 @@ find . -name "*R1_val_1.fq.gz" | \
     > ../../samples_renamed_merged.txt
 cd ../..
 
+# Step 4: Back up old sample list
+mv samples.txt samples_old.txt
+
 echo "Done!"
