@@ -15,7 +15,7 @@
 #SBATCH --mail-user=g.vyoshikawa@uq.edu.au
 set -eu
 
-cd /scratch/user/uqgventu/
+cd /scratch/user/$USER/
 
 # Step 2: Merge FASTQ files
 line=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$1")
