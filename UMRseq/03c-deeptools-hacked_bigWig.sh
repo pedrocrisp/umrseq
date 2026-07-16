@@ -32,24 +32,6 @@ echo changing to SLURM_SUBMIT_DIR
 cd "$SLURM_SUBMIT_DIR"
 echo working dir is now $PWD
 
-########## Modules #################
-# dependencies
-# conda env with deeptools-hacked and mosdepth installed
-# conda create deeptools-hacked python=3.7
-# conda activate deeptools-hacked
-# conda install -c bioconda mosdepth
-# conda install -c bioconda deeptools=3.5.1
-# in "writeBedGraph.py"
-# eg found in: ~/miniconda3/pkgs/deeptools-3.5.1-pyhdfd78af_1/site-packages/deeptools
-# uncomment:
-#  # uncomment these lines if fixed step bedgraph is required
-#            if not np.isnan(value):
-#                writeStart = start + tileIndex * self.binLength
-#                writeEnd  =  min(writeStart + self.binLength, end)
-#                _file.write(line_string.format(chrom, writeStart,
-#                                               writeEnd, value))
-#            continue
-#
 module load miniconda3/23.9.0-0
 source $EBROOTMINICONDA3/etc/profile.d/conda.sh
 
@@ -195,5 +177,4 @@ H=${bam_dir}_insert_metrics/${ID}_insert_size_histogram.pdf \
 CREATE_INDEX=FALSE \
 M=0.5
 
-conda deactivate
 echo finished summarising
