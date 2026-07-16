@@ -12,10 +12,8 @@
 #SBATCH -o ./out/cat.%j.out             # output file
 #SBATCH -e ./out/cat.%j.err             # error file
 #SBATCH --mail-type=END		        # Notifications (once the code words, change to END to avoid too many emails)
-#SBATCH --mail-user=g.vyoshikawa@uq.edu.au
 set -eu
 
-cd /scratch/user/$USER/
 
 # Step 2: Merge FASTQ files
 line=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$1")
@@ -28,7 +26,7 @@ newfilename=$(echo "$line" | awk '{print $2}')
     
     echo "Merging: $basefilename (all lanes) → $newfilename"
     
-    # Now wildcard matches ALL lanes: _L001, _L002, _L003, etc.
+    # Now wildcard matches ALL lanes: _L001, _L002, _L003, etc., and merge the various lanes together:
     cat "./analysis/trimmed_lanes/${basefilename}"_L*_R1_val_1.fq.gz \
         > "./analysis/trimmed/${newfilename}_R1_val_1.fq.gz"
 
