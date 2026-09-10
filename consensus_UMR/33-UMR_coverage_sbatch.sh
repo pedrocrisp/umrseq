@@ -25,7 +25,7 @@ Arguments:
 
 This is step 1 of the within-sample UMR calling workflow (an alternative to
 steps 22-27, suited to a small number of samples rather than a large cohort -
-see README_UMR_CONSENSUS.md): it computes, per sample, the mean read depth
+see README_UMR_CONSENSUS.md): it computes from BAM files, per sample, the mean read depth
 over each consensus UMR interval using mosdepth. One array task per sample."
 
 #define step in the pipeline - should be the same name as the script
