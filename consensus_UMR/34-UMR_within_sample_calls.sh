@@ -21,6 +21,8 @@ echo working dir is now $PWD
 
 ########## Modules #################
 
+module load miniconda3/23.9.0-0
+source $EBROOTMINICONDA3/etc/profile.d/conda.sh
 conda activate $conda_enviro
 
 ########## Set up sample #################
