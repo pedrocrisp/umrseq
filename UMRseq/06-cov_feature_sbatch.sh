@@ -80,6 +80,6 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},bigwig_dir=${bigwig_dir},out_dir=${out_dir},feature_bed=${feature_bed},conda_enviro=${conda_enviro} \
+--export LIST=${sample_list},bigwig_dir=${bigwig_dir},out_dir=${out_dir},feature_bed=${feature_bed},conda_enviro=${conda_enviro},scriptdir=${scriptdir} \
 --account $account_department \
 $script_to_sbatch

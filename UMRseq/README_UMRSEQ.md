@@ -112,6 +112,10 @@ Loaded via `module load` on the cluster (Bunya) or from a conda environment
 - epic2 **0.0.41** (conda) - newer versions' paired-end mode gave ~10x lower
   coverage in testing, so use 0.0.41 in single-end mode
 - MACS2 2.2.9.1 (optional)
+- Picard jar location is hard-coded in the coverage scripts (edit the
+  `java -jar` line if yours is elsewhere): `03c` expects
+  `~/software/picard/build/libs/picard.jar`, `03b` expects
+  `~/software/picard.jar`. `02b` takes the jar path as an argument
 - R 4.4.2 with `tidyverse`, `ggplot2`, `ggthemes` (step 06) and `csaw`,
   `rtracklayer`, `GenomicRanges`, `edgeR`, `statmod` (step 07)
 - bedtools 2.30.0 (step 04 only)
@@ -174,12 +178,14 @@ with post-trim FastQC reports in `analysis/fastqc/`.
 ### 01b-cat (optional): merge lanes
 
 For libraries sequenced over multiple lanes. Unlike the other steps this is
-a single script submitted directly with `sbatch` (it has `#SBATCH` headers
-with a hard-coded account - edit before use). It takes a two-column,
-whitespace-delimited file: original per-lane name, new merged sample name.
+a single script submitted directly with `sbatch`, so pass your account on
+the command line. It takes a two-column, whitespace-delimited file: original
+per-lane name, new merged sample name. Job logs are written to `./out/`,
+which must exist before submitting.
 
 ```bash
-sbatch --array 1-<n_samples> 01b-cat.sh lane_merge_list.txt
+mkdir -p out
+sbatch --account AccountString --array 1-<n_samples> 01b-cat.sh lane_merge_list.txt
 ```
 
 Concatenates `analysis/trimmed_lanes/<base>_L*_R{1,2}_val_{1,2}.fq.gz` into
@@ -298,7 +304,7 @@ fragment). Outputs per sample:
 | `<bam_dir>_insert_metrics/` | `<sample>_insert_size_metrics.txt` / `_histogram.pdf` | - | - |
 
 Picard is run from `~/software/picard/build/libs/picard.jar` - edit the path
-in `03c-deeptools-hacked_bigWig.sh` if yours is elsewhere.
+in `03c-deeptools-hacked_bigWig.sh` if yours is elsewhere (see Dependencies).
 
 ### 03b-deeptools_bigWig (legacy)
 
@@ -523,9 +529,6 @@ tail logs/<timestamp>_<step>/<step>_e_*_1     # stderr for array task 1
 - **File not found** - remember `bam_dir`, `reads_folder` etc. are relative
   to `analysis/`, and sample names in `samples.txt` must not include the
   file suffix.
-- **R scripts not found** - `06-cov_feature.sh` and `07-csaw.sh` call their
-  R scripts from `~/gitrepos/umrseq/UMRseq/`; clone the repo there or edit
-  the path.
 - **Module not found** - module versions change as the cluster is updated;
   edit the `module load` lines in the `.sh` script.
 - **Single sample** - the array range is set to `1` automatically if

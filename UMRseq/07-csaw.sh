@@ -40,7 +40,7 @@ cd analysis
 ########## Run #################
 
 ## Run R module to create 100bp tile bed file
-R -f ~/gitrepos/umrseq/UMRseq/07-csaw.R \
+R -f ${scriptdir}/07-csaw.R \
 --args $ID $DMR_contrasts_table_file $path_to_data_files $blacklist $filter_FC $bin_size $window_spacing
 
 # Annotation module
@@ -98,7 +98,7 @@ R -f ~/gitrepos/umrseq/UMRseq/07-csaw.R \
 ## # TE_annotation: ~/umn/refseqs/maize/genome_annotations/Zea_mays.AGPv4.dna.toplevel_sorted.chrom.sizes
 ## 
 ## # summarise and plot annotation
-## R -f ~/gitrepos/umrseq/UMRseq/07-csaw-gene-overlaps.R \
+## R -f ${scriptdir}/07-csaw-gene-overlaps.R \
 ## --args $ID $DMR_contrasts_table_file $path_to_data_files $blacklist $filter_FC $bin_size $window_spacing
 
 echo finished summarising

@@ -83,7 +83,7 @@ plotHeatmap \
 # Run R module to create 100bp tile bed file
 module load r/4.4.2-gfbf-2024a
 
-R -f ~/gitrepos/umrseq/UMRseq/06-cov_feature_summarise.R \
+R -f ${scriptdir}/06-cov_feature_summarise.R \
 --args $ID $out_dir
 
 
