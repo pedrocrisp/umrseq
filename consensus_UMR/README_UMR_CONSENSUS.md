@@ -157,6 +157,11 @@ Within-sample calling workflow (alternative to phases 5-7):
 - `35-UMR_within_sample_calls_table_sbatch.sh` -> `35-UMR_within_sample_calls_table.sh` -> `35-UMR_within_sample_calls_table.py`
   (single job, phase 11)
 
+Optional, after either workflow:
+
+- `43-UMR_calls_to_vcf_sbatch.sh` -> `43-UMR_calls_to_vcf.sh` -> `43-UMR_calls_to_vcf.py`
+  (single job - converts a call table to VCF, see "Step 43" below)
+
 ## Usage
 
 ### Step 1: assign per-sample UMR IDs (array job)
@@ -450,6 +455,31 @@ Joins every sample's calls into one `UMR_ID x sample` table, recoding
 coverage distribution) are filled with `NA` for every UMR rather than
 treated as an error. The column order is taken directly from `samples.txt`.
 
+### Step 43 (optional): convert UMR calls to VCF (single job)
+
+```bash
+bash 43-UMR_calls_to_vcf_sbatch.sh \
+    ./umr_calling/all_samples.UMR.calls.tsv \
+    ./umr_calling \
+    0:30:00 \
+    4 \
+    myenv \
+    my_department
+```
+
+Converts a UMR x sample call table - step 7's `<out_prefix>.UMR.calls.tsv`
+or step 11's `<out_prefix>.UMR.within_sample.calls.tsv` - into a placeholder
+VCF, so UMR calls can be analysed with the same tools as SNPs (e.g. PCA or
+GWAS software that reads VCF, alongside the SNPs from `../UMRseq_SNP/`).
+Each UMR becomes one site on a dummy chromosome `chrU` at consecutive
+positions, with the UMR ID in the ID column; calls are coded `1` -> `1/1`
+(present), `0` -> `0/0` (absent), `NA` -> `./.` (missing). Any other value
+is an error. `conda_enviro` only needs `python3`.
+
+Adapted from `make_vcf.py` (Agnieszka A. Golicz, `7.call_snps`); sample
+names now come directly from the table header, and `NA` is written as
+missing rather than absent.
+
 ## Outputs
 
 **Step 2** (in step 2's output_dir, named `<out_prefix>...`):
@@ -496,6 +526,8 @@ treated as an error. The column order is taken directly from `samples.txt`.
 **Step 10** (in step 10's output_dir): per sample, `<sample_prefix>.coverage.calls.tsv` (chrom, start, end, UMR_ID, depth, YES/NO - only written if a bimodal split was found), `<sample_prefix>.coverage.stats.txt` (sample, bw method, bw value, valley count, peak count, bimodal Y/N, cutoff - always written, diagnostic), and `plots/<sample_prefix>.plot1.bi.pdf` / `plots/<sample_prefix>.plot2.bi.pdf` (KDE and peak/valley plots, written for every sample including skipped ones, so a non-bimodal sample's distribution can still be inspected - the cutoff line is omitted when no cutoff was found).
 
 **Step 11** (in step 11's output_dir): `<out_prefix>.UMR.within_sample.calls.tsv` - every UMR, one row each, with `1`/`0`/`NA` per sample (`NA` for samples step 10 couldn't call).
+
+**Step 43** (optional, in step 43's output_dir): `<calls_table_basename>.vcf` - the input table's name with `.tsv` replaced by `.vcf`, e.g. `all_samples.UMR.calls.vcf`.
 
 ## Consensus algorithm
 
