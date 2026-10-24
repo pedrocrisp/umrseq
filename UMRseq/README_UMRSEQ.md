@@ -510,10 +510,6 @@ ls logs/                                      # one folder per submission
 tail logs/<timestamp>_<step>/<step>_e_*_1     # stderr for array task 1
 ```
 
-- **Wrong argument order** - the `USAGE:` line printed by several
-  `_sbatch.sh` scripts is out of date (some name the wrong script or list
-  arguments in the wrong order). The argument lists in this README match
-  what the code actually reads.
 - **File not found** - remember `bam_dir`, `reads_folder` etc. are relative
   to `analysis/`, and sample names in `samples.txt` must not include the
   file suffix.
