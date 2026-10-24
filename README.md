@@ -1,2 +1,2 @@
 # umrseq
-UMR-seq code
+UMR-seq pipelien code base
