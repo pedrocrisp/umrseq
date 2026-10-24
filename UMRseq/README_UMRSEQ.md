@@ -27,8 +27,8 @@ through to per-sample unmethylated region (UMR) calls, coverage tracks and
 differential UMRs:
 
 1. QC and adapter trimming (FastQC, Trim Galore)
-2. Alignment and MAPQ filtering (Bowtie2, samtools), optional duplicate
-   removal (Picard)
+2. Alignment and MAPQ filtering (Bowtie2, samtools), with an optional
+   duplication rate check (Picard) - not used in the default workflow
 3. CPM-normalised coverage tracks and tiles (deepTools `bamCoverage`,
    mosdepth), plus insert size metrics (Picard)
 4. Per-sample UMR calling (epic2, with FRiP via deepTools; MACS2 as an
@@ -229,7 +229,12 @@ one-row-per-sample table from the sorted BAMs:
 bash flagstat_summary.sh samples.txt analysis/trimmed_align_bowtie2 flagstat > flagstat_summary.tsv
 ```
 
-### 02b-filter-dups (optional): remove duplicates and improper pairs
+### 02b-filter-dups (optional): check duplication rate
+
+Not part of the default workflow - our standard analysis uses the step 02
+`<sample>_sorted.bam` files directly and skips this step. Use it to check
+the duplication rate of a library and to make a de-duplicated BAM for
+comparison.
 
 ```bash
 bash 02b-filter-dups_sbatch.sh \
@@ -245,15 +250,15 @@ bash 02b-filter-dups_sbatch.sh \
 Arguments: `<sample_list> <bam_dir> <paired_end yes|no> <picard_jar>
 <walltime> <memory> <account>`. Picard `MarkDuplicates
 REMOVE_DUPLICATES=true`, then (PE only) bamtools keeps mapped, properly
-paired reads. Output:
-`<bam_dir>_filtered/<sample>_sorted_NoDup_ProPairs.bam`.
+paired reads. Outputs in `<bam_dir>_filtered/`:
 
-Note the filtered BAMs are named differently from step 02's
-`<sample>_sorted.bam`, and steps 03-07 expect `<sample>_sorted.bam` - so
-they don't pick up filtered BAMs automatically. `macs2` can use them
-directly with `-f`.
+- `<sample>_NoDupMetrics.txt` - Picard duplication metrics
+  (`PERCENT_DUPLICATION` is the duplication rate)
+- `<sample>_sorted_NoDup_ProPairs.bam` (+ `.bai`) - de-duplicated BAM
 
-The stardard analysis does not de-duplicate. However, for SNP caliing de-duplication is required - the SNP module will deduplicate.
+The de-duplicated BAMs are named differently from step 02's
+`<sample>_sorted.bam`, so steps 03-07 won't pick them up. `macs2` can use
+them with `-f`.
 
 ## Step 03: coverage tracks
 

@@ -70,6 +70,9 @@ bamtools filter \
 -in ${bam_dir}_filtered/${ID}_NoDup.bam \
 -out ${bam_dir}_filtered/${ID}_sorted_NoDup_ProPairs.bam
 
+# remove intermediate de-duplicated bam (before proper pairs filter)
+rm -v ${bam_dir}_filtered/${ID}_NoDup.bam
+
 #index bam
 # index
 samtools index ${bam_dir}_filtered/${ID}_sorted_NoDup_ProPairs.bam
@@ -99,5 +102,6 @@ echo "done filtering"
 else
 
 echo "library type not specified correctly, please indicate yes for PE or no for SE"
+exit 1
 
 fi
