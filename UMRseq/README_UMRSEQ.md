@@ -364,14 +364,19 @@ bash macs2_sbatch.sh \
     -A AccountString \
     -m 20 -c 1 -t 2:00:00 \
     -s 2.1e9 \
-    -p yes \
-    -C no
+    -p yes
 ```
 
-- `-s` effective genome size (or a MACS2 shortcut, e.g. `hs`)
-- `-p yes|no` paired-end (`-f BAMPE`) or single-end
-- `-C` control sample prefix, or `no` for none (**required** - the script
-  fails if `-C` is omitted)
+Required (no defaults - the script exits with an error if any are omitted):
+`-i` sample list, `-r` BAM folder, `-A` SLURM account string, and `-s`
+effective genome size (e.g. `2.1e9`, or a MACS2 shortcut such as `hs`).
+
+Optional:
+
+- `-p yes|no` paired-end (`-f BAMPE`, default) or single-end
+- `-m` memory in GB (default `20`), `-c` CPUs (default `1`), `-t` walltime
+  (default `2:00:00`)
+- `-C` control sample prefix (optional, default `no` - no control)
 - `-B` broad peaks, `-f` use `02b` filtered BAMs, `-D nomodel` to disable
   fragment size modelling (has no effect with `BAMPE`)
 

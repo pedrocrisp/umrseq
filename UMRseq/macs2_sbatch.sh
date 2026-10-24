@@ -16,23 +16,27 @@ step=macs2
 Help()
 {
 
-echo "This script submits a batch job to PBS in order to run MACS2 for peak calling before or after deduplication."
+echo "This script submits a SLURM array job to run MACS2 for peak calling before or after deduplication."
 echo
 echo "USAGE:"
-echo "bash macs_sbatch.sh -i sample_list.txt -r reads_folder -A department -m memory
--c number_of_cores -t walltime -s genome_size -p paired_end [-B(road)]"
+echo "bash macs2_sbatch.sh -i sample_list.txt -r reads_folder -A AccountString -s genome_size
+[-m memory] [-c number_of_cores] [-t walltime] [-p paired_end] [-C control_prefix] [-D nomodel] [-B] [-f]"
 echo
-echo "For genome_size, input the effective genome size, either in scientific or dec
-imal notation."
-echo "Default value: 2.7e9."
+echo "Required:"
+echo "-i sample list, one sample prefix per line"
+echo "-r reads (bam) folder, relative to analysis/"
+echo "-A AccountString (your SLURM account), there is no default."
+echo "-s effective genome size, in scientific or decimal notation (eg 2.1e9), there is no default."
 echo
-echo "For paired_end, input 'yes' for paired-end reads and 'no' for single-end reads."
-echo "Default value: no"
-echo
-echo "Default memory usage is 20GB, default CPU usage is 6 CPUs and default walltime
- is 2 hours."
-echo
-echo "Add the tag -B to activate broad peak analysis and the tag -f if the samples have been filtered using the script 02b-filter-dups_sbatch.sh."
+echo "Optional:"
+echo "-p paired_end, 'yes' for paired-end reads and 'no' for single-end reads. Default: yes"
+echo "-m memory in GB. Default: 20"
+echo "-c number of CPUs. Default: 1"
+echo "-t walltime. Default: 2:00:00"
+echo "-C <control_prefix> to use a control sample. Default: no control."
+echo "-D nomodel to disable MACS2 fragment size modelling. Default: model (no effect with paired-end BAMPE)"
+echo "-B to activate broad peak analysis"
+echo "-f if the samples have been filtered using the script 02b-filter-dups_sbatch.sh"
 
 }
 
@@ -40,12 +44,16 @@ echo "Add the tag -B to activate broad peak analysis and the tag -f if the sampl
 mem=20
 cores=1
 walltime=2:00:00
-genome_size=hs
 paired_end=yes
 broad=no
 filter=no
 model=yes
-account=a_agfs_ps
+control=no
+# required args - no defaults, checked below
+sample_list=""
+reads_folder=""
+account=""
+genome_size=""
 
 while getopts ":i:r:o:A:m:c:t:s:p:C:D:Bfh" option; do
    case $option in
@@ -80,17 +88,6 @@ step=macs2
 
 ############## Setup ###############
 
-if [ "$1" == "-h" || "$1" == "--help" ]
-then
-
-echo $usage
-echo
-echo $size_explain
-echo $PE_explain
-
-exit 0
-fi
-
 errors=0
 
 if [[ ! $sample_list ]]
@@ -109,6 +106,12 @@ if [[ ! $reads_folder ]]
 then
 errors=$(($errors + 100))
 echo "ERROR: No reads folder"
+fi
+
+if [[ ! $genome_size ]]
+then
+errors=$(($errors + 1000))
+echo "ERROR: No genome size"
 fi
 
 if [[ $errors -gt 0 ]]
