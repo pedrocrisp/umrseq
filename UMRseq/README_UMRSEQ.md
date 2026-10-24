@@ -6,6 +6,12 @@ without warranty.
 Version dev v2.0
 UMR-seq pipeline dev team
 
+# Acknowledgements
+
+Scripts created and maintained by Peter Crisp <p.crisp@uq.edu.au>,
+Guilherme Ventura Yoshicawa <g.vyoshikawa@uq.edu.au>, Misha Mangila,
+Vanessa Putland, Judith Eglitis-Sexton
+
 # Updates and version notes
 
 - steps 01-05 (QC, trimming, alignment, coverage tracks, epic2 UMR calls) are
@@ -26,15 +32,16 @@ Processes paired-end (or single-end) Illumina UMR-seq reads from raw FASTQ
 through to per-sample unmethylated region (UMR) calls, coverage tracks and
 differential UMRs:
 
-1. QC and adapter trimming (FastQC, Trim Galore)
-2. Alignment and MAPQ filtering (Bowtie2, samtools), with an optional
-   duplication rate check (Picard) - not used in the default workflow
-3. CPM-normalised coverage tracks and tiles (deepTools `bamCoverage`,
-   mosdepth), plus insert size metrics (Picard)
-4. Per-sample UMR calling (epic2, with FRiP via deepTools; MACS2 as an
-   alternative)
-5. Coverage profiles over features of interest (deepTools `computeMatrix`)
-6. Differential UMRs between pairs of sample groups (csaw/edgeR)
+- `01` QC and adapter trimming (FastQC, Trim Galore)
+- `02` Alignment and MAPQ filtering (Bowtie2, samtools), with an optional
+  duplication rate check (Picard) - not used in the default workflow
+- `03` CPM-normalised coverage tracks and tiles (deepTools `bamCoverage`,
+  mosdepth), plus insert size metrics (Picard)
+- `05` Per-sample UMR calling (epic2, with FRiP via deepTools; MACS2 as an
+  alternative)
+- `06` Coverage profiles over features of interest (deepTools `computeMatrix`)
+- `07` Differential UMRs between pairs of sample groups (csaw/edgeR)
+- `10` Fraction of reads in a custom region set (FRiP, deepTools)
 
 The per-sample epic2 calls from step 05 are the input to the cohort consensus
 and presence/absence calling pipeline in `../consensus_UMR/`.
@@ -65,7 +72,8 @@ Some steps also call an `.R` script from the job script.
   blank lines (the array size is `wc -l` of this file). To run a single sample a hack is to list this sample, followed by a blank line.
 - `walltime` - `HH:MM:SS`
 - `memory` - in GB (just the number, e.g. `20`)
-- `conda_enviro` - name of the conda environment to activate
+- `conda_enviro` - name of the conda environment to activate (or full
+  path - see Dependencies)
 - `account_department` - SLURM account string, e.g. `AccountString`
 
 ## Project directory layout
@@ -101,8 +109,8 @@ project/
 
 ## Dependencies
 
-Loaded via `module load` on the cluster (Bunya) or from a conda environment
-- see the `Modules` block at the top of each `.sh` script.
+Loaded via `module load` on the cluster (Bunya) or from a conda
+environment; see the `Modules` block at the top of each `.sh` script.
 
 Scripts that use a conda environment load the cluster's conda
 (`module load miniconda3/23.9.0-0`) before `conda activate <conda_enviro>`.
@@ -124,13 +132,12 @@ or pass the full path to the environment as `conda_enviro`, e.g.
 
 - FastQC 0.11.9, Trim Galore + cutadapt 4.4 (conda)
 - Bowtie2 2.4.5, samtools 1.13
-- Picard (jar path set in the scripts / passed as an argument), Java 11+,
-  bamtools 2.5.2
+- Java 11+, bamtools 2.5.2
 - deepTools 3.5.1 and mosdepth (conda) - see "Hacked deepTools" below
 - epic2 **0.0.41** (conda) - newer versions' paired-end mode gave ~10x lower
   coverage in testing, so use 0.0.41 in single-end mode
 - MACS2 2.2.9.1 (optional)
-- Picard jar location is hard-coded in the coverage scripts (edit the
+- Picard - the jar location is hard-coded in the coverage scripts (edit the
   `java -jar` line if yours is elsewhere): `03c` expects
   `~/software/picard/build/libs/picard.jar`, `03b` expects
   `~/software/picard.jar`. `02b` takes the jar path as an argument
@@ -281,7 +288,7 @@ paired reads. Outputs in `<bam_dir>_filtered/`:
 - `<sample>_sorted_NoDup_ProPairs.bam` (+ `.bai`) - de-duplicated BAM
 
 The de-duplicated BAMs are named differently from step 02's
-`<sample>_sorted.bam`, so steps 03-07 won't pick them up. `macs2` can use
+`<sample>_sorted.bam`, so steps 03-06 and 10 won't pick them up. `macs2` can use
 them with `-f`.
 
 ## Step 03: coverage tracks
@@ -405,7 +412,7 @@ Optional:
 - `-p yes|no` paired-end (`-f BAMPE`, default) or single-end
 - `-m` memory in GB (default `20`), `-c` CPUs (default `1`), `-t` walltime
   (default `2:00:00`)
-- `-C` control sample prefix (optional, default `no` - no control)
+- `-C` control sample prefix (default `no` - no control)
 - `-B` broad peaks, `-f` use `02b` filtered BAMs, `-D nomodel` to disable
   fragment size modelling (has no effect with `BAMPE`)
 
