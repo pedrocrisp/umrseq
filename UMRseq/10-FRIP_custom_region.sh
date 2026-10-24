@@ -23,6 +23,8 @@ echo working dir is now $PWD
 # dependencies
 # conda env with deeptools
 # see 03 or 06 for example installs
+module load miniconda3/23.9.0-0
+source $EBROOTMINICONDA3/etc/profile.d/conda.sh
 
 conda activate $conda_enviro
 

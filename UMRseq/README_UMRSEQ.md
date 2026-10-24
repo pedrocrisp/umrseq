@@ -104,6 +104,24 @@ project/
 Loaded via `module load` on the cluster (Bunya) or from a conda environment
 - see the `Modules` block at the top of each `.sh` script.
 
+Scripts that use a conda environment load the cluster's conda
+(`module load miniconda3/23.9.0-0`) before `conda activate <conda_enviro>`.
+If you created your environments with your own conda install (e.g.
+`~/miniconda3`), the job may fail with `EnvironmentNameNotFound` even though
+`conda env list` shows the environment (listed with a path but no name).
+Either tell the cluster conda where your environments are (one-off, saved
+to `~/.condarc`):
+
+```bash
+module load miniconda3/23.9.0-0
+source $EBROOTMINICONDA3/etc/profile.d/conda.sh
+conda config --append envs_dirs ~/miniconda3/envs
+conda env list    # your environments should now be listed by name
+```
+
+or pass the full path to the environment as `conda_enviro`, e.g.
+`~/miniconda3/envs/deeptools-hacked`.
+
 - FastQC 0.11.9, Trim Galore + cutadapt 4.4 (conda)
 - Bowtie2 2.4.5, samtools 1.13
 - Picard (jar path set in the scripts / passed as an argument), Java 11+,

@@ -20,6 +20,9 @@ cd "$SLURM_SUBMIT_DIR"
 echo working dir is now $PWD
 
 ########## Modules #################
+module load miniconda3/23.9.0-0
+source $EBROOTMINICONDA3/etc/profile.d/conda.sh
+
 conda activate $conda_enviro
 # dependencies
 # conda env with deeptools-hacked and mosdepth installed
