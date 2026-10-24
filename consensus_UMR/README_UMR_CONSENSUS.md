@@ -1,5 +1,42 @@
 # UMR Consensus Pipeline
 
+Disclaimer: these pipeline scripts are still in development, provided for use
+without warranty.
+
+Version dev v2.0
+UMR-seq pipeline dev team
+
+# Updates and version notes
+
+- the across sample UMR-calls module is stable
+  - ideas for optimisation:
+  - consde sensitivity test the merge step
+  
+- the within-sample UMR-calls module is in active development (August 2026), to
+  optimise for experiments on samples with highly similar UMR profiles, such as
+  with genotype treatments where very few UMRs are expected to change. Testing
+  diffrent KDE bandwidth models and background estimation.
+
+# Acknowledgements
+The concept and original scripts for this 'UMR consensus'
+pipeline was conceved and developed by Agnieszka A. Golicz, in particular the
+novel approach to call epitypes (UMR presence/absence) using a kernal density
+function as implemented in the 25-UMR_call.py and 34-UMR_within_sample_calls.py
+scripts. The original scrips have been ported over to this repository
+reformatted into a pipeline format similar to the other UMR-seq pipeline steps
+for ease of use for other users and and some updates made, but full credit goes
+to the original developer:
+
+Original script versions and contact:
+##################################################
+## Author: Agnieszka A. Golicz                    
+## Version: 1.0                                   
+## Maintainer: Agnieszka A. Golicz                
+## Email: agnieszka.golicz@agrar.uni-giessen.de   
+## Status: Alpha                                  
+##################################################
+
+# Overview                                                 
 Builds a cohort consensus set of unmethylated regions (UMRs) from per-sample
 UMR BED files (e.g. epic2 calls), in the two-tier SLURM array job pattern used
 elsewhere in this repo.
@@ -24,17 +61,17 @@ Step 2 also splits every consensus UMR into fixed-size consecutive sub-bins
 (e.g. 50bp), for analyses that need finer-grained intervals than whole UMRs -
 see "Binning (step 2)" below.
 
-This replaces the ad-hoc scripts in `2.consensus.pe/` (`1.make_consensus.slm`),
-`3.calculate_support.pe.fc/` (`1.format_bed.sh`, `2.featurecounts.slm`),
-`5.across_samples.pe.v2/` (`1.combine.fc.slm`, `2.split.sh`, `3.make_calls.slm`,
-`4.make_sample_plots.slm`, `5.make_call_table.sh`), `3.calculate_support.pe.md/`
-(`1.mosdepth.slm`), and `4.within_samples.pe/` (`1.make_calls.slm`,
-`2.combine_calls.sh`), which hardcoded a working directory and manually
-maintained sample-to-ID / sample-to-BAM mapping files (`list1.txt`,
-`list.f.txt`, `list.n.txt`, `list.txt`, `list2.txt`). This module instead
-takes a plain sample list (one prefix per line, like the other pipelines in
-this repo) and derives IDs and file paths automatically, so it can run on
-any dataset.
+For reference - this replaces the scripts from v1.0  `2.consensus.pe/`
+(`1.make_consensus.slm`), `3.calculate_support.pe.fc/` (`1.format_bed.sh`,
+`2.featurecounts.slm`), `5.across_samples.pe.v2/` (`1.combine.fc.slm`,
+`2.split.sh`, `3.make_calls.slm`, `4.make_sample_plots.slm`,
+`5.make_call_table.sh`), `3.calculate_support.pe.md/` (`1.mosdepth.slm`), and
+`4.within_samples.pe/` (`1.make_calls.slm`, `2.combine_calls.sh`), which
+hardcoded a working directory and manually maintained sample-to-ID /
+sample-to-BAM mapping files (`list1.txt`, `list.f.txt`, `list.n.txt`,
+`list.txt`, `list2.txt`). This module instead takes a plain sample list (one
+prefix per line, like the other pipelines in this repo) and derives IDs and file
+paths automatically, so it can run on any dataset.
 
 ## Why so many trios
 
