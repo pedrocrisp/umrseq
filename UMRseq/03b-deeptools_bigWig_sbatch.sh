@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <conda_enviro> <account_department>
+bash 03b-deeptools_bigWig_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <conda_enviro> <account_department>
 "
 
 #define stepo in the pipeline - should be the same name as the script

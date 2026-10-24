@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 02-bowtie1_sbatch.sh <sample_list.txt> <reads_folder> <bt2_threads> <bt2_genome.fa> <q10filter> <walltime> <mem> [genome_index] <account_department>"
+bash 02-bowtie2_sbatch.sh <sample_list.txt> <reads_folder> <bt2_threads> <bt2_genome_index> <mapq_filter> <walltime> <mem> <account_department> [genome_index: bai (default) or csi]"
 
 #define stepo in the pipeline - should be the same name as the script
 step=02-bowtie2

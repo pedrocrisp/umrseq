@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <walltime> <memory> <bigWig folder> <out folder> <feature bed file> <conda_enviro> <account_department>
+bash 06c-cov_feature_heatmap_sbatch.sh <sample_list.txt> <walltime> <memory> <mat_dir> <out_dir> <y_min> <y_max> <colour_map> <conda_enviro> <account_department>
 Use this script to remake the heatmap woth additional args
 "
 

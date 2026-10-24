@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <walltime> <memory> <bigWig folder> <out folder> <feature bed file> <conda_enviro> <account_department>
+bash 06-cov_feature_sbatch.sh <sample_list.txt> <walltime> <memory> <bigwig_dir> <out_dir> <feature_bed> <conda_enviro> <account_department>
 "
 
 #define stepo in the pipeline - should be the same name as the script
@@ -19,7 +19,7 @@ feature_bed=$6
 conda_enviro=$7
 account_department=$8
 
-if [ "$#" -lt "7" ]
+if [ "$#" -lt "8" ]
 then
 echo $usage
 exit -1

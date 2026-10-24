@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 03-bed_bigWig_tiles_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <resolution_bw> <conda_enviro> <blacklist> <account_department>
+bash 03c-deeptools-hacked_bigWig_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <conda_enviro> <highres: highres to make 1bp bigWig, any other value to skip> <blacklist> <account_department>
 "
 
 # blacklist = blacklist bed file (regions recalcitrant to digestion as predicted by in silico analysis)

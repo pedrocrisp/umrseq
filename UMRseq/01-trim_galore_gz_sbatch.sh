@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 01-trim_galore_sbatch.sh <sample_list.txt> <walltime> <memory> <account_department>"
+bash 01-trim_galore_gz_sbatch.sh <sample_list.txt> <walltime> <memory> <conda_enviro> <account_department>"
 
 #define step in the pipeline - should be the same name as the script
 step=01-trim_galore_gz
