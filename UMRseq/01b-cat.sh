@@ -7,7 +7,6 @@
 #SBATCH --time=00:05:00             # time allocation (D-HH:MM:SS)
 #SBATCH --mem=10G                   # memory pool for all cores
 #SBATCH --qos=normal
-#SBATCH --account=a_agfs_ps
 #SBATCH --job-name=merge_lanes
 #SBATCH -o ./out/cat.%j.out             # output file
 #SBATCH -e ./out/cat.%j.err             # error file
