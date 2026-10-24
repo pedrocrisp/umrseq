@@ -318,9 +318,9 @@ bash 03d-deeptools-hacked_bigTile_beds_sbatch.sh \
 ```
 
 Arguments are the same as `03c`, except argument 6 is the bin size in bp.
-The blacklist argument is required but not used. Output:
-`<bam_dir>_hacked__<res>bp_tiles/<sample>_1Mb.bed` (bedGraph at `<res>` bp -
-note the double underscore and the fixed `_1Mb` file name).
+The blacklist argument is required (to keep the same argument order as
+`03c`) but not currently used - pass any value, e.g. `none`. Output:
+`<bam_dir>_hacked_<res>bp_tiles/<sample>_<res>bp.bed` (bedGraph at `<res>` bp).
 
 ### 04-bed_tiles (deprecated)
 

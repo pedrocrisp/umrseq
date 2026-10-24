@@ -75,7 +75,7 @@ mkdir -p ${bam_dir}_hacked_${res}bp_tiles
 # --blackListFileName $blacklist is not used in this step as behavour is untested - would it skip an entire Mb tile if it had a 100bp of blacklisted bps???
 bamCoverage \
 --bam $bam_dir/${ID}_sorted.bam \
--o ${bam_dir}_hacked__${res}bp_tiles/${ID}_1Mb.bed \
+-o ${bam_dir}_hacked_${res}bp_tiles/${ID}_${res}bp.bed \
 --binSize ${res} \
 --normalizeUsing CPM \
 --extendReads \
