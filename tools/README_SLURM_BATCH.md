@@ -16,17 +16,18 @@ This package contains SLURM array job scripts for parallel processing of bigWig 
 
 ## Setup
 
-### 1. Place all scripts in the same directory
+### 1. Keep the scripts together and set up your working directory
+
+The `_sbatch.sh`, `.sh` and `.py` scripts must stay in the same directory as
+each other (e.g. `tools/` in the repo) - the `_sbatch.sh` runner finds the job
+script and passes its own location to the job, which runs the Python script
+from there. They don't need to be in your working directory: run the
+`_sbatch.sh` runner by its path (e.g. `bash ~/gitrepos/umrseq/tools/recombine_bigwig_sbatch.sh ...`)
+from the directory holding your data.
 
 ```bash
 # Your working directory structure should look like:
 .
-├── recombine_bigwig_sbatch.sh
-├── recombine_bigwig.sh
-├── recombine_bigwig.py
-├── recombine_bed_sbatch.sh
-├── recombine_bed.sh
-├── recombine_bed.py
 ├── samples.txt
 ├── Morex_pseudomolecules_v2_splits_chr1_7_Un_Pt_to_chr_corrected_N.csv
 └── bigwigs/
@@ -207,7 +208,7 @@ source activate genomics
 ### Jobs fail immediately
 - Check module names are correct for your cluster
 - Verify Python has pandas installed
-- Check that all Python scripts are in the working directory
+- Check that the `.py` scripts are in the same directory as the `_sbatch.sh` and `.sh` scripts
 
 ### "Permission denied"
 - Make scripts executable: `chmod +x *.sh`

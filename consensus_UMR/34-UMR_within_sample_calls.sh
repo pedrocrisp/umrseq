@@ -48,8 +48,8 @@ fi
 
 echo "Starting within-sample UMR calling for $SAMPLE_PREFIX at $(date)"
 
-# Run the Python script from the git repository folder (note: this location is hard coded)
-python ~/gitrepos/AI_code_dev_testing/34-UMR_within_sample_calls.py \
+# Run the Python script from the script directory (SCRIPT_DIR, passed from the _sbatch.sh runner)
+python ${SCRIPT_DIR}/34-UMR_within_sample_calls.py \
     "$REGIONS_GZ" \
     "$SAMPLE_PREFIX" \
     "$OUTPUT_DIR" \

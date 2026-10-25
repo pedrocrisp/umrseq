@@ -120,7 +120,7 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},COVERAGE_DIR=${coverage_dir},OUTPUT_DIR=${output_dir},SHIFT=${shift_frac},BW=${bw},conda_enviro=${conda_enviro} \
+--export LIST=${sample_list},COVERAGE_DIR=${coverage_dir},OUTPUT_DIR=${output_dir},SHIFT=${shift_frac},BW=${bw},SCRIPT_DIR=${scriptdir},conda_enviro=${conda_enviro} \
 --account $account_department \
 $script_to_sbatch
 

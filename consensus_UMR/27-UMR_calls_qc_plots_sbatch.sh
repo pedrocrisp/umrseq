@@ -99,7 +99,7 @@ sbatch \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%j \
 -e ${log_folder}/${step}_e_%j \
---export CALLS_TABLE=${calls_table},CPM_MATRIX=${cpm_matrix},OUTPUT_DIR=${output_dir},N_UMRS=${n_umrs},conda_enviro=${conda_enviro} \
+--export CALLS_TABLE=${calls_table},CPM_MATRIX=${cpm_matrix},OUTPUT_DIR=${output_dir},N_UMRS=${n_umrs},SCRIPT_DIR=${scriptdir},conda_enviro=${conda_enviro} \
 --account $account_department \
 $script_to_sbatch
 

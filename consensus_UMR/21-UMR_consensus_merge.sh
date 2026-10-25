@@ -67,7 +67,7 @@ echo "Merging overlapping UMRs across samples at $(date)"
 bedtools merge -i "$ALL_UMR_BED" -c 4 -o collapse -delim "|" > "$MERGED_BED"
 
 echo "Building cohort consensus UMRs at $(date)"
-python ~/gitrepos/AI_code_dev_testing/21-UMR_consensus_merge.py \
+python ${SCRIPT_DIR}/21-UMR_consensus_merge.py \
     "$ALL_UMR_BED" \
     "$MERGED_BED" \
     > "$CONSENSUS_BED"
@@ -85,13 +85,13 @@ echo "Converting consensus UMRs to SAF for featureCounts at $(date)"
 awk 'BEGIN{OFS="\t"} {print $4, $1, $2+1, $3, "."}' "$CONSENSUS_NOALT_BED" > "$CONSENSUS_NOALT_SAF"
 
 echo "Splitting consensus UMRs into ${BIN_SIZE}bp sub-bins at $(date)"
-# Run the Python script from the git repository folder (note: this location is hard coded)
-python ~/gitrepos/AI_code_dev_testing/21-UMR_consensus_bin.py \
+# Run the Python script from the script directory (SCRIPT_DIR, passed from the _sbatch.sh runner)
+python ${SCRIPT_DIR}/21-UMR_consensus_bin.py \
     "$CONSENSUS_BED" \
     "$CONSENSUS_BIN_BED" \
     "$BIN_SIZE"
 
-python ~/gitrepos/AI_code_dev_testing/21-UMR_consensus_bin.py \
+python ${SCRIPT_DIR}/21-UMR_consensus_bin.py \
     "$CONSENSUS_NOALT_BED" \
     "$CONSENSUS_NOALT_BIN_BED" \
     "$BIN_SIZE"

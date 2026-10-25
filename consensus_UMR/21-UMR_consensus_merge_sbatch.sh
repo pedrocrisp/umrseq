@@ -109,7 +109,7 @@ sbatch \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%j \
 -e ${log_folder}/${step}_e_%j \
---export LIST=${sample_list},SUFFIX=${file_suffix},NAMES_DIR=${names_dir},OUTPUT_DIR=${output_dir},OUT_PREFIX=${out_prefix},BIN_SIZE=${bin_size},conda_enviro=${conda_enviro} \
+--export LIST=${sample_list},SUFFIX=${file_suffix},NAMES_DIR=${names_dir},OUTPUT_DIR=${output_dir},OUT_PREFIX=${out_prefix},BIN_SIZE=${bin_size},SCRIPT_DIR=${scriptdir},conda_enviro=${conda_enviro} \
 --account $account_department \
 $script_to_sbatch
 

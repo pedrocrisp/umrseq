@@ -44,8 +44,8 @@ fi
 
 echo "Starting UMR calling for $BATCH_FILE at $(date)"
 
-# Run the Python script from the git repository folder (note: this location is hard coded)
-python ~/gitrepos/AI_code_dev_testing/25-UMR_calls.py \
+# Run the Python script from the script directory (SCRIPT_DIR, passed from the _sbatch.sh runner)
+python ${SCRIPT_DIR}/25-UMR_calls.py \
     "$BATCH_FILE" \
     "$OUTPUT_DIR"
 

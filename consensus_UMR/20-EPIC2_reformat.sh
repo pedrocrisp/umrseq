@@ -53,8 +53,8 @@ fi
 
 echo "Starting UMR ID assignment for $SAMPLE_PREFIX at $(date)"
 
-# Run the Python script from the git repository folder (note: this location is hard coded)
-python ~/gitrepos/AI_code_dev_testing/20-EPIC2_reformat.py \
+# Run the Python script from the script directory (SCRIPT_DIR, passed from the _sbatch.sh runner)
+python ${SCRIPT_DIR}/20-EPIC2_reformat.py \
     "$INPUT_FILE" \
     "$OUTPUT_FILE" \
     "$SAMPLE_PREFIX"

@@ -105,7 +105,7 @@ sbatch \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%j \
 -e ${log_folder}/${step}_e_%j \
---export SAMPLE_LIST=${sample_list},CALLS_DIR=${calls_dir},OUTPUT_DIR=${output_dir},OUT_PREFIX=${out_prefix},conda_enviro=${conda_enviro} \
+--export SAMPLE_LIST=${sample_list},CALLS_DIR=${calls_dir},OUTPUT_DIR=${output_dir},OUT_PREFIX=${out_prefix},SCRIPT_DIR=${scriptdir},conda_enviro=${conda_enviro} \
 --account $account_department \
 $script_to_sbatch
 

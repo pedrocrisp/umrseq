@@ -44,8 +44,8 @@ done < "$LIST"
 
 echo "Building read support summary table at $(date)"
 
-# Run the Python script from the git repository folder (note: this location is hard coded)
-python ~/gitrepos/AI_code_dev_testing/23-UMR_featurecounts_summary.py \
+# Run the Python script from the script directory (SCRIPT_DIR, passed from the _sbatch.sh runner)
+python ${SCRIPT_DIR}/23-UMR_featurecounts_summary.py \
     "$LIST" \
     "$COUNTS_DIR" \
     "$OUTPUT_TSV"

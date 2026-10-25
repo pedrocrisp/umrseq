@@ -34,10 +34,10 @@ CALLS_TABLE="${OUTPUT_DIR}/${OUT_PREFIX}.UMR.within_sample.calls.tsv"
 
 echo "Building within-sample UMR calls table at $(date)"
 
-# Run the Python script from the git repository folder (note: this location is hard coded)
+# Run the Python script from the script directory (SCRIPT_DIR, passed from the _sbatch.sh runner)
 # Samples with no '<sample_prefix>.coverage.calls.tsv' (non-bimodal coverage
 # distribution in step 2) are filled with NA rather than treated as an error
-python ~/gitrepos/AI_code_dev_testing/35-UMR_within_sample_calls_table.py \
+python ${SCRIPT_DIR}/35-UMR_within_sample_calls_table.py \
     "$SAMPLE_LIST" \
     "$CALLS_DIR" \
     "$CALLS_TABLE"

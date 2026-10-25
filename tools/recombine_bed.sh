@@ -60,8 +60,8 @@ fi
 
 echo "Starting chromosome recombination for $SAMPLE_PREFIX at $(date)"
 
-# Run the Python script from the git repository folder (note: this location is hard coded)
-python ~/gitrepos/AI_code_dev_testing/recombine_bed.py \
+# Run the Python script from the script directory (SCRIPT_DIR, passed from the _sbatch.sh runner)
+python ${SCRIPT_DIR}/recombine_bed.py \
     "$INPUT_FILE" \
     "$CONVERSION_TABLE" \
     "$OUTPUT_FILE" \

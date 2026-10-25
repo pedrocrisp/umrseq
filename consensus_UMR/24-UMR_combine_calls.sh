@@ -74,13 +74,13 @@ paste "${OUTPUT_DIR}/.col1.txt" "${COV_FILES[@]}" > "$RAW_MATRIX"
 rm -f "${OUTPUT_DIR}/.col1.txt" "${COV_FILES[@]}"
 
 echo "CPM-normalising counts matrix at $(date)"
-Rscript ~/gitrepos/AI_code_dev_testing/24-UMR_combine_calls_cpm.R \
+Rscript ${SCRIPT_DIR}/24-UMR_combine_calls_cpm.R \
     "$RAW_MATRIX" \
     "$CPM_MATRIX" \
     "$CPM_FLT_MATRIX"
 
 echo "Splitting CPM matrix into batches (target ${BATCH_SIZE} UMRs/batch) at $(date)"
-python ~/gitrepos/AI_code_dev_testing/24-UMR_combine_calls_split.py \
+python ${SCRIPT_DIR}/24-UMR_combine_calls_split.py \
     "$CPM_MATRIX" \
     "$BATCH_DIR" \
     "$BATCH_SIZE"
