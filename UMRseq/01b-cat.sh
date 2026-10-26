@@ -14,7 +14,7 @@
 set -euo pipefail
 
 
-# Step 2: Merge FASTQ files
+# Merge FASTQ files
 line=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$1")
 orgfilename=$(echo "$line" | awk '{print $1}')
 newfilename=$(echo "$line" | awk '{print $2}')
