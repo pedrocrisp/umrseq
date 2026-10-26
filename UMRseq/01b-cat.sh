@@ -10,8 +10,8 @@
 #SBATCH --job-name=merge_lanes
 #SBATCH -o ./out/cat.%j.out             # output file
 #SBATCH -e ./out/cat.%j.err             # error file
-#SBATCH --mail-type=END		        # Notifications (once the code words, change to END to avoid too many emails)
-set -eu
+
+set -euo pipefail
 
 
 # Step 2: Merge FASTQ files
@@ -32,15 +32,5 @@ newfilename=$(echo "$line" | awk '{print $2}')
     cat "./analysis/trimmed_lanes/${basefilename}"_L*_R2_val_2.fq.gz \
         > "./analysis/trimmed/${newfilename}_R2_val_2.fq.gz"
 
-
-# Step 3: Create new sample list
-cd ./analysis/trimmed || exit 1
-find . -name "*R1_val_1.fq.gz" | \
-    sed 's|^\./||; s|_R1_val_1\.fq\.gz||' \
-    > ../../samples_renamed_merged.txt
-cd ../..
-
-# Step 4: Back up old sample list
-mv samples.txt samples_old.txt
 
 echo "Done!"
