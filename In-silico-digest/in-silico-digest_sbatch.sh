@@ -147,7 +147,7 @@ if command -v sacct >/dev/null 2>&1; then
          echo "Preprocessing job $pre_jobid did not complete successfully: $state" >&2
          exit 1
       fi
-else echo "sacct not available; assuming preprocess finished successfully (monitor manually if needed)" fi
+else echo "sacct not available; assuming preprocess finished successfully (monitor manually if needed)" 
 fi
 
 TEMP=${output}-tmp
@@ -183,7 +183,7 @@ if [[ "$number_of_samples" -gt 1 ]]
    then sbatch_t="1-${number_of_samples}"
 fi
 
-echo "argument to be passed to sbatch -J is '$sbatch_t'"
+echo "argument to be passed to array is '$sbatch_t'"
 
 mkdir -p logs
 
@@ -200,7 +200,7 @@ cat $0 > ${log_folder}/sbatch_runner.log
 post_script_sbatch=${scriptdir}/process-fragments.sh
 cat $post_script_sbatch > ${log_folder}/script2.log
 
-sbatch --dependency=afterok:${pre_jobid} \
+sbatch \
 --array $sbatch_t \
 -t ${walltime} \
 -N 1 \
