@@ -166,17 +166,17 @@ DIG=$(basename $output)
 #Submit batch job to sbatch
 genome_size=${OUT}/${DIG}.chrom.sizes
 
-#### Process motifs file
-if [[ -z "$number_of_samples" || "$number_of_samples" -lt 1 ]]; 
-   then echo "No samples found in ${TEMP}/motifs-regex.txt" >&2 
-   exit 1 
-fi
-
 ####
 step=in-silico-digest-s
 
 number_of_samples=`wc -l ${TEMP}/motifs-regex.txt \
 | awk '{print $1}'`
+
+#### Process motifs file
+if [[ -z "$number_of_samples" || "$number_of_samples" -lt 1 ]]; 
+   then echo "No samples found in ${TEMP}/motifs-regex.txt" >&2 
+   exit 1 
+fi
 
 sbatch_t=1
 if [[ "$number_of_samples" -gt 1 ]]
