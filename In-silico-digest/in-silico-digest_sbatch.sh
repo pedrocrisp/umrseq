@@ -138,7 +138,7 @@ echo "Submitted preprocessing job: $pre_jobid"
 
 echo "Waiting for preprocess job $pre_jobid to finish..." 
 while squeue -j "$pre_jobid" >/dev/null 2>&1; 
-   do sleep 30 
+   do sleep 120 
 done
 
 if command -v sacct >/dev/null 2>&1; then 
