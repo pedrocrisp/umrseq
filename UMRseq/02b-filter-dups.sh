@@ -26,12 +26,13 @@ export RUN_PICARD="java -jar $PICARD_PATH"
 ########## Modules #################
 module load java/21.0.8
 module load bamtools/2.5.3-gcc-14.2.0
+module load samtools/1.22.1-gcc-14.2.0
 # module load bamtools/2.5.2-gcc-12.3.0
 # module load bamtools/2.5.2-gcc-10.3.0
 
 # *** updating samtools to gcc-11.3 (but v11 also being phased out in 2026 - test samtools/1.18-gcc-12.3.0)
 # module load samtools/1.13-gcc-10.3.0 ***
-module load samtools/1.13-gcc-11.3.0
+# module load samtools/1.13-gcc-11.3.0
 # samtools/1.18-gcc-12.3.0
 
 ########## Set up dirs #################
