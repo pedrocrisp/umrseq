@@ -24,7 +24,7 @@ echo working dir is now $PWD
 export RUN_PICARD="java -jar $PICARD_PATH"
 
 ########## Modules #################
-module load java/11.0.18
+module load java/21.0.8
 module load bamtools/2.5.2-gcc-12.3.0
 # module load bamtools/2.5.2-gcc-10.3.0
 
