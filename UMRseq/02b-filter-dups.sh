@@ -63,7 +63,7 @@ $RUN_PICARD MarkDuplicates \
 -O ${bam_dir}_filtered/${ID}_NoDup.bam \
 -M ${bam_dir}_filtered/${ID}_NoDupMetrics.txt \
 -ASSUME_SORT_ORDER coordinate \
--CREATE_INDEX False \
+-CREATE_INDEX false \
 -REMOVE_DUPLICATES true
 
 # keep properly paired reads using bamtools package
@@ -89,12 +89,12 @@ then
 
 # remove duplicate
 $RUN_PICARD MarkDuplicates \
-I=${bam_dir}/${ID}_sorted.bam \
-O=${bam_dir}_filtered/${ID}_sorted_NoDup.bam \
-M=${bam_dir}_filtered/${ID}_NoDupMetrics.txt \
-ASSUME_SORT_ORDER=coordinate \
-CREATE_INDEX=False \
-REMOVE_DUPLICATES=true
+-I ${bam_dir}/${ID}_sorted.bam \
+-O ${bam_dir}_filtered/${ID}_sorted_NoDup.bam \
+-M ${bam_dir}_filtered/${ID}_NoDupMetrics.txt \
+-ASSUME_SORT_ORDER coordinate \
+-CREATE_INDEX false \
+-REMOVE_DUPLICATES true
 
 # rename to keep script naming convention consistent
 mv ${bam_dir}_filtered/${ID}_sorted_NoDup.bam ${bam_dir}_filtered/${ID}_sorted_NoDup_ProPairs.bam
