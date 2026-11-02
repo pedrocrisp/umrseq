@@ -30,6 +30,11 @@ Run it after 02b-filter-dups from the UMRseq pipeline."
 step=40-SNP_call
 
 ######### Setup ################
+if [ "$#" -lt "9" ]; then
+  echo "$usage"
+  exit -1
+fi
+
 sample_list=$1
 bam_suffix=$2
 bam_dir=$3
@@ -40,11 +45,6 @@ walltime=$7
 mem=$8
 account_department=$9
 
-if [ "$#" -lt "9" ]
-then
-echo "$usage"
-exit -1
-else
 echo "Submitting regions listed in '$regions_list' for SNP calling"
 echo "Sample list: '$sample_list'"
 echo "BAM suffix: '$bam_suffix'"
@@ -54,7 +54,7 @@ echo "Output directory: '$output_dir'"
 echo ""
 echo "Sample list:"
 cat $sample_list
-fi
+
 
 #check inputs exist
 for f in "$sample_list" "$regions_list" "$reference_fasta" "${reference_fasta}.fai"; do
