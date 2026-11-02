@@ -24,6 +24,7 @@ echo working dir is now $PWD
 export RUN_PICARD="java -jar $PICARD_PATH"
 
 ########## Modules #################
+module purge
 module load java/21.0.8
 module load bamtools/2.5.3-gcc-14.2.0
 module load samtools/1.22.1-gcc-14.2.0
@@ -34,6 +35,7 @@ module load samtools/1.22.1-gcc-14.2.0
 # module load samtools/1.13-gcc-10.3.0 ***
 # module load samtools/1.13-gcc-11.3.0
 # samtools/1.18-gcc-12.3.0
+
 
 ########## Set up dirs #################
 
@@ -55,13 +57,14 @@ then
 #requires sorted input - using samtools sort in bsmap step (co-ordinate sorted)
 # if co-ordinate sorted then pairs where the mate is unmapped or has secondary alignment are not marked as duplicate
 # ASSUME_SORTED=true because sorting performed with samtools but samtools doesnt seem to add this flag to the header
+#picard command line has changed:
 $RUN_PICARD MarkDuplicates \
-I=${bam_dir}/${ID}_sorted.bam \
-O=${bam_dir}_filtered/${ID}_NoDup.bam \
-M=${bam_dir}_filtered/${ID}_NoDupMetrics.txt \
-ASSUME_SORT_ORDER=coordinate \
-CREATE_INDEX=False \
-REMOVE_DUPLICATES=true
+-I ${bam_dir}/${ID}_sorted.bam \
+-O ${bam_dir}_filtered/${ID}_NoDup.bam \
+-M ${bam_dir}_filtered/${ID}_NoDupMetrics.txt \
+-ASSUME_SORT_ORDER coordinate \
+-CREATE_INDEX False \
+-REMOVE_DUPLICATES true
 
 # keep properly paired reads using bamtools package
 # note that some reads marked as properly paired by bsmap actually map to different chromosomes
