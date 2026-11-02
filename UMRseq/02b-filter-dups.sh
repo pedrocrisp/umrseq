@@ -48,6 +48,27 @@ echo sample being mapped is $ID
 cd analysis
 mkdir -p ${bam_dir}_filtered
 
+# ---- Check for read group; add one if missing ----
+in_bam=${bam_dir}/${ID}_sorted.bam
+rg_bam=${bam_dir}/${ID}_sorted_RG.bam
+
+# Count @RG lines in the header, and RG tags in the first 1000 reads.
+# "|| true" stops set -e / pipefail from ending the script when the count is 0.
+header_rg=$(samtools view -H "$in_bam" | grep -c '^@RG' || true)
+read_rg=$( { samtools view "$in_bam" | head -n 1000 | grep -c 'RG:Z:'; } 2>/dev/null || true)
+
+if [[ "$header_rg" -eq 0 || "$read_rg" -eq 0 ]]; then
+    echo "No read group found in $in_bam - adding one"
+    samtools addreplacerg \
+        -r "ID:${ID}" -r "SM:${ID}" -r "LB:${ID}" -r "PL:ILLUMINA" \
+        -o "$rg_bam" \
+        "$in_bam"
+    picard_in=$rg_bam
+else
+    echo "Read group already present in $in_bam"
+    picard_in=$in_bam
+fi
+
 if [ "$paired_end" == "yes" ]
 then
 
@@ -59,7 +80,7 @@ then
 # ASSUME_SORTED=true because sorting performed with samtools but samtools doesnt seem to add this flag to the header
 #picard command line has changed:
 $RUN_PICARD MarkDuplicates \
--I ${bam_dir}/${ID}_sorted.bam \
+-I "$picard_in" \
 -O ${bam_dir}_filtered/${ID}_NoDup.bam \
 -M ${bam_dir}_filtered/${ID}_NoDupMetrics.txt \
 -ASSUME_SORT_ORDER coordinate \
@@ -89,7 +110,7 @@ then
 
 # remove duplicate
 $RUN_PICARD MarkDuplicates \
--I ${bam_dir}/${ID}_sorted.bam \
+-I $"picard_in" \
 -O ${bam_dir}_filtered/${ID}_sorted_NoDup.bam \
 -M ${bam_dir}_filtered/${ID}_NoDupMetrics.txt \
 -ASSUME_SORT_ORDER coordinate \
@@ -109,4 +130,9 @@ else
 echo "library type not specified correctly, please indicate yes for PE or no for SE"
 exit 1
 
+fi
+
+# Remove the temporary read-group BAM if one was made
+if [[ "$picard_in" == "$rg_bam" ]]; then
+    rm -v "$rg_bam"
 fi
