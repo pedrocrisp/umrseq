@@ -137,10 +137,8 @@ or pass the full path to the environment as `conda_enviro`, e.g.
 - epic2 **0.0.41** (conda) - newer versions' paired-end mode gave ~10x lower
   coverage in testing, so use 0.0.41 in single-end mode
 - MACS2 2.2.9.1 (optional)
-- Picard - the jar location is hard-coded in the coverage scripts (edit the
-  `java -jar` line if yours is elsewhere): `03c` expects
-  `~/software/picard/build/libs/picard.jar`, `03b` expects
-  `~/software/picard.jar`. `02b` takes the jar path as an argument
+- Picard - `02b`, `03b` and `03c` take the full path to `picard.jar` as an
+  argument (e.g. `~/software/picard.jar`), so it can be installed anywhere
 - R 4.4.2 with `tidyverse`, `ggplot2`, `ggthemes` (step 06) and `csaw`,
   `rtracklayer`, `GenomicRanges`, `edgeR`, `statmod` (step 07)
 - bedtools 2.30.0 (step 04 only)
@@ -304,16 +302,18 @@ bash 03c-deeptools-hacked_bigWig_sbatch.sh \
     deeptools-hacked \
     lowres \
     ~/refseqs/maize/maize-fragments-filtered-50%Ns.bed \
+    ~/software/picard.jar \
     AccountString
 ```
 
 Arguments (in this order): `<sample_list> <walltime> <memory> <bam_dir>
-<conda_enviro> <highres> <blacklist> <account>`.
+<conda_enviro> <highres> <blacklist> <picard_jar> <account>`.
 
 - `highres` - `highres` to also make a 1bp-resolution bigWig (large files);
   any other value (e.g. `lowres`) skips it
 - `blacklist` - BED of regions to exclude, e.g. regions recalcitrant to
   digestion predicted by `../In-silico-digest/`
+- `picard_jar` - full path to `picard.jar`, used for the insert size metrics
 
 All tracks are CPM-normalised with `--extendReads` (fills in the whole PE
 fragment). Outputs per sample:
@@ -328,9 +328,6 @@ fragment). Outputs per sample:
 | `<bam_dir>_mosdepth/` | `<sample>.regions.bed.gz` etc. | 500bp | no |
 | `<bam_dir>_insert_metrics/` | `<sample>_insert_size_metrics.txt` / `_histogram.pdf` | - | - |
 
-Picard is run from `~/software/picard/build/libs/picard.jar` - edit the path
-in `03c-deeptools-hacked_bigWig.sh` if yours is elsewhere (see Dependencies).
-
 ### 03b-deeptools_bigWig (legacy)
 
 Original version, for a standard deepTools install. Same idea as `03c` but no
@@ -338,7 +335,7 @@ blacklist, and writes to `<bam_dir>_bigWigs_deeptools/`,
 `<bam_dir>_100bp_tiles/` etc.
 
 ```bash
-bash 03b-deeptools_bigWig_sbatch.sh samples.txt 10:00:00 20 trimmed_align_bowtie2 deeptools AccountString
+bash 03b-deeptools_bigWig_sbatch.sh samples.txt 10:00:00 20 trimmed_align_bowtie2 deeptools ~/software/picard.jar AccountString
 ```
 
 ### 03d-deeptools-hacked_bigTile_beds: CPM tiles at a custom resolution

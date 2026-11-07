@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 03c-deeptools-hacked_bigWig_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <conda_enviro> <highres: highres to make 1bp bigWig, any other value to skip> <blacklist> <account_department>
+bash 03c-deeptools-hacked_bigWig_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <conda_enviro> <highres: highres to make 1bp bigWig, any other value to skip> <blacklist> <picard_path: full path to picard.jar> <account_department>
 "
 
 # blacklist = blacklist bed file (regions recalcitrant to digestion as predicted by in silico analysis)
@@ -20,9 +20,10 @@ bam_dir=$4
 conda_enviro=$5
 highres=$6
 blacklist=$7
-account_department=$8
+picard_path=$8
+account_department=$9
 
-if [ "$#" -lt "8" ]
+if [ "$#" -lt "9" ]
 then
 echo $usage
 exit -1
@@ -83,7 +84,7 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},bam_dir=${bam_dir},conda_enviro=${conda_enviro},highres=${highres},blacklist=${blacklist} \
+--export LIST=${sample_list},bam_dir=${bam_dir},conda_enviro=${conda_enviro},highres=${highres},blacklist=${blacklist},PICARD_PATH=${picard_path} \
 --account $account_department \
 $script_to_sbatch
 

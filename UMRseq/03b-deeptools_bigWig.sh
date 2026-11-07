@@ -142,14 +142,14 @@ $bam_dir/${ID}_sorted.bam
 
 ############ get frag sizes ##############
 # get frag sizes to check level of tagmentation using picard
-# path to call picard jar - eg  - "/home/uqpcrisp/software/picard.jar"
+# path to picard jar is passed from the sbatch script as PICARD_PATH - eg "/home/uqpcrisp/software/picard.jar"
 
 ########## Modules #################
 module load java/11.0.18
 # picard needs R
 module load r/4.4.2-gfbf-2024a
 
-java -jar ~/software/picard.jar CollectInsertSizeMetrics \
+java -jar "$PICARD_PATH" CollectInsertSizeMetrics \
 I=$bam_dir/${ID}_sorted.bam \
 O=${bam_dir}_insert_metrics/${ID}_insert_size_metrics.txt \
 H=${bam_dir}_insert_metrics/${ID}_insert_size_histogram.pdf \

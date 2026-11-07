@@ -3,7 +3,7 @@
 set -xeuo pipefail
 
 usage="USAGE:
-bash 03b-deeptools_bigWig_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <conda_enviro> <account_department>
+bash 03b-deeptools_bigWig_sbatch.sh <sample_list.txt> <walltime> <memory> <bam_dir> <conda_enviro> <picard_path: full path to picard.jar> <account_department>
 "
 
 #define stepo in the pipeline - should be the same name as the script
@@ -16,9 +16,10 @@ mem=$3
 bam_dir=$4
 conda_enviro=$5
 #RPGC=$6
-account_department=$6
+picard_path=$6
+account_department=$7
 
-if [ "$#" -lt "6" ]
+if [ "$#" -lt "7" ]
 then
 echo $usage
 exit -1
@@ -79,7 +80,7 @@ sbatch --array $sbatch_t \
 --mem ${mem}gb \
 -o ${log_folder}/${step}_o_%A_%a \
 -e ${log_folder}/${step}_e_%A_%a \
---export LIST=${sample_list},bam_dir=${bam_dir},conda_enviro=${conda_enviro} \
+--export LIST=${sample_list},bam_dir=${bam_dir},conda_enviro=${conda_enviro},PICARD_PATH=${picard_path} \
 --account $account_department \
 $script_to_sbatch
 
