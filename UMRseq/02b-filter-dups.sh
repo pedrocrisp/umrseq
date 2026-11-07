@@ -110,7 +110,7 @@ then
 
 # remove duplicate
 $RUN_PICARD MarkDuplicates \
--I $"picard_in" \
+-I "$picard_in" \
 -O ${bam_dir}_filtered/${ID}_sorted_NoDup.bam \
 -M ${bam_dir}_filtered/${ID}_NoDupMetrics.txt \
 -ASSUME_SORT_ORDER coordinate \
