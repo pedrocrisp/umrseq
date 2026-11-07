@@ -33,7 +33,7 @@ fastqcfolder=analysis/fastqc_raw
 mkdir -p $fastqcfolder
 
 # check how many satqs there are - assumes "fastq" suffix
-fastqs="$(find ./reads -type f -name ${ID}*.fastq*)"
+fastqs="$(find ./reads -maxdepth 1 -type f -name "${ID}_R[12]*.fastq*")"
 # convert to array to count elements
 fastqs_count=($fastqs)
 

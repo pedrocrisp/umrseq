@@ -56,7 +56,7 @@ fi
 
 if [ "$filter" == "no" ]
 then
-input="-t ${reads_folder}/${ID}*sorted.bam"
+input="-t ${reads_folder}/${ID}_sorted.bam"
 fi
 
 # control is optional
@@ -66,7 +66,7 @@ then
 control_input=""
 echo "User specified to not use a control sample"
 else
-control_input="-c ${reads_folder}/${control}*sorted.bam"
+control_input="-c ${reads_folder}/${control}_sorted.bam"
 fi
 
 

@@ -178,7 +178,7 @@ bash 01-qc_sbatch.sh \
     AccountString
 ```
 
-Looks for `reads/<sample>*.fastq*`; two files = paired-end. Output in
+Looks for `reads/<sample>_R1*.fastq*` and `_R2*`; two files = paired-end. Output in
 `analysis/fastqc_raw/` - run `multiqc` there to summarise.
 
 ### 01-trim_galore_gz: adapter trimming

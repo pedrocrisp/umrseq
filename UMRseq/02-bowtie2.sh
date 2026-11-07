@@ -41,7 +41,7 @@ echo sample being mapped is $ID
 cd analysis
 
 # check how many faqs there are
-fastqs="$(find $reads_folder -type f -name ${ID}_*.fq*)"
+fastqs="$(find "$reads_folder" -maxdepth 1 -type f -name "${ID}_R[12]*.fq*")"
 # convert to array to count elements
 fastqs_count=($fastqs)
 
